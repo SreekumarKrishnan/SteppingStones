@@ -1,0 +1,142 @@
+<%- include('../layouts/header.ejs')%>
+
+<div class="product_image_area">
+    
+    <div class="container">
+        <div class="row s_product_inner">
+            <div class="col-lg-6">
+                <div class="s_Product_carousel">
+                    <div class="single-prd-item">
+                        <div class="zoom-image-container">
+                            <img class="img-fluid zoom-image" src="../product-images/<%= product.images[0]%>" alt="">
+                        </div>
+                    </div>
+
+                    <div class="single-prd-item">
+                        <div class="zoom-image-container">
+                            <img class="img-fluid zoom-image" src="../product-images/<%= product.images[1]%>" alt="">
+                        </div>
+                        
+                    </div>
+                    <div class="single-prd-item">
+                        <div class="zoom-image-container">
+                            <img class="img-fluid zoom-image" src="../product-images/<%= product.images[2]%>" alt="">
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 offset-lg-1">
+                <div class="s_product_text">
+                    <h3><%=product.name%></h3>
+                    <h2><i class="fa fa-inr" aria-hidden="true"></i> <%=product.price%></h2>
+                    <ul class="list">
+                        <li><a class="active" href="#"><span>Category</span> :<%=product.category.name%></a></li>
+                        <li><a href="#"><span>Availibility</span> : In Stock</a></li>
+                    </ul>
+                    <p><%=product.description%></p>
+                    
+                    <div class="card_area d-flex align-items-center">
+                        <button class="primary-btn" onclick="addtocart('<%=product._id%>')">Add to Cart</button>
+                        <a class="icon_btn" href="#"><i class="lnr lnr lnr-diamond"></i></a>
+                        <a class="icon_btn" href="#"><i class="lnr lnr lnr-heart"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--================End Single Product Area =================-->
+
+<!--================Product Description Area =================-->
+<section class="product_description_area">
+    <div class="container">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Description</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" id="review-tab" data-toggle="tab" href="#review" role="tab" aria-controls="review"
+                 aria-selected="false">Reviews</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <p><%=product.category.description%></p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<%- include('../layouts/footer.ejs')%>
+
+<style>
+    .zoom-image-container {
+        overflow: hidden;
+        position: relative;
+    }
+
+    .zoom-image {
+        transition: transform 0.3s ease;
+        max-width: 100%;
+        display: block;
+    }
+
+    .zoom-circle {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+        border: 2px solid #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        transform: scale(1);
+        transition: transform 0.3s ease;
+    }
+</style>
+
+<script>
+    // Function to handle the zoom effect
+    function handleZoom(event) {
+        const imageContainer = event.currentTarget;
+        const image = imageContainer.querySelector('.zoom-image');
+        const zoomCircle = imageContainer.querySelector('.zoom-circle');
+
+        // Get the position of the mouse pointer relative to the image container
+        const rect = imageContainer.getBoundingClientRect();
+        const offsetX = event.clientX - rect.left;
+        const offsetY = event.clientY - rect.top;
+
+        // Calculate the position of the zoom circle and set its size
+        const circleSize = 100; // Adjust this value to change the size of the zoom circle
+        const circleX = offsetX - circleSize / 2;
+        const circleY = offsetY - circleSize / 2;
+
+        // Apply the zoom effect by changing the scale of the image and zoom circle
+        image.style.transformOrigin = `${offsetX}px ${offsetY}px`;
+        image.style.transform = 'scale(2.2)';
+
+        zoomCircle.style.width = circleSize + 'px';
+        zoomCircle.style.height = circleSize + 'px';
+        zoomCircle.style.left = circleX + 'px';
+        zoomCircle.style.top = circleY + 'px';
+        zoomCircle.style.transform = 'scale(2)'; // Adjust this value to change the zoom circle's zoom level
+    }
+
+    // Function to reset the zoom effect
+    function resetZoom(event) {
+        const imageContainer = event.currentTarget;
+        const image = imageContainer.querySelector('.zoom-image');
+        const zoomCircle = imageContainer.querySelector('.zoom-circle');
+
+        image.style.transform = 'scale(1)';
+        zoomCircle.style.transform = 'scale(1)';
+    }
+
+    // Attach event listeners to the image container
+    const imageContainers = document.querySelectorAll('.zoom-image-container');
+    imageContainers.forEach(container => {
+        container.addEventListener('mousemove', handleZoom);
+        container.addEventListener('mouseleave', resetZoom);
+    });
+</script>

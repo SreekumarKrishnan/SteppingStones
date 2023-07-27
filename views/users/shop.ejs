@@ -1,0 +1,120 @@
+
+
+	<!-- Start Header Area -->
+    <%- include('../layouts/header.ejs') %>	
+
+	<!-- End Header Area -->
+
+	<!-- Start Banner Area -->
+	<section class="banner-area organic-breadcrumb">
+		<div class="container">
+			<div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+				<div class="col-first">
+					<h1>Shop Category page</h1>
+					<nav class="d-flex align-items-center">
+						<a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
+						<a href="#">Shop<span class="lnr lnr-arrow-right"></span></a>
+						<a href="category.html">Stepping Stones</a>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- End Banner Area -->
+	<div class="container">
+		<div class="row">
+			<div class="col-xl-3 col-lg-4 col-md-5">
+				<div class="sidebar-categories">
+					<div class="head">Browse Categories</div>
+					<ul class="main-categories">
+						<% category.forEach(function(item) { %>
+							<li class="main-nav-list"><a class="nav-link" href="/categoryShop?id=<%= item._id %>"><span class="lnr lnr-arrow-right"></span><%= item.name %></a></li>
+						</li>
+						<% }) %>								
+					</ul>
+				</div>
+				
+			</div>
+			<div class="col-xl-9 col-lg-8 col-md-7">
+				<!-- Start Best Seller -->
+				<section class="lattest-product-area pb-40 category-list">
+					<div class="row">
+						<!-- single product -->
+            <% product.forEach((item) => { %>
+						<div class="col-lg-4 col-md-6">
+							<div class="single-product">
+								<div class="product-image-container">
+                                    <img class="img-fluid product-image" src="../product-images/<%= item.images[0]%>" alt="">
+                                </div>
+								<div class="product-details">
+									<small><%=item.category.name%></small>
+									<h6 title="<%=item.name %>" class="tooltip-ellipsis"><%=item.name %></h6>
+									<div class="price">
+										<h6><i class="fa fa-inr" aria-hidden="true"> </i> <%= item.price%></h6>
+									</div>
+									<div class="prd-bottom">
+										<a onclick="addtocart('<%=item._id%>')" class="social-info">
+											<span class="ti-bag"></span>
+											<p class="hover-text">add to bag</p>
+										</a>
+										<a href="" class="social-info">
+											<span class="lnr lnr-heart"></span>
+											<p class="hover-text">Wishlist</p>
+										</a>
+										<a href="/productPage?id=<%=item._id %>" class="social-info">
+											<span class="lnr lnr-move"></span>
+											<p class="hover-text">view more</p>
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+            <% }) %>
+						<!-- single product -->
+					</div>
+				</section>
+				<!-- End Best Seller -->
+			</div>
+		</div>
+	</div>
+
+	<!-- Start related-product Area -->
+
+	<!-- End related-product Area -->
+
+	<!-- start footer Area -->
+	<%- include('../layouts/footer.ejs') %>	
+
+	<!-- End footer Area -->
+
+
+    <style>
+      .product-image-container {
+    position: relative;
+    height: 250px; /* Set the desired height for the images */
+    overflow: hidden;
+}
+
+/* Style for the zoomed image */
+.product-image-zoom {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* Style to set the actual image size */
+.product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Zoomed image on hover */
+.product-image:hover {
+    transform: scale(1.2); /* Increase the scale to zoom in (e.g., 1.2 for 20% zoom) */
+    transition: transform 0.3s ease; /* Add a smooth transition effect */
+}
+    </style>

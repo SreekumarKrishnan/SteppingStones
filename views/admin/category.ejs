@@ -1,0 +1,71 @@
+<%- include('../layouts/adminHeader.ejs')%>
+
+<section class="content-main">
+    <div class="row">
+        <div class="col-6">
+            <div class="content-header">
+                <h2 class="content-title">Categories</h2>
+                <div>
+                    <a class="btn btn-md rounded font-sm hover-up" href="/admin/addCategory"  type="button">New Category</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+               
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">
+                                    </th>
+                                    <th>Name</th>
+                                    <th>Description</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                              <% categories.forEach(category => { %>
+                                <tr>
+                                    <td class="text-center">
+                                    </td>
+                                    <td  class="tooltip-ellipsis" title="<%=category.name %>"><b><%=category.name %></b></td>
+                                    <td title="<%=category.description %>" class="tooltip-ellipsis"><%=category.description %></td>
+                                    <td> <%if(category.isListed==true){%>
+                                        <div class="col-lg-2 col-sm-2 col-4 col-status">
+                                            <span class="badge rounded-pill alert-success">Active</span>
+                                        </div>
+                                        <%}else{%>
+                                            <div class="col-lg-2 col-sm-2 col-4 col-status">
+                                                <span class="badge rounded-pill alert-warning">Unlisted</span>
+                                            </div>
+                                            <%}%></td>
+                                    <td class="text-end">
+                                        <div class="dropdown">
+                                            <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="/admin/editCategory?id=<%=category._id %>">Edit info</a>
+                                                <%if(category.isListed==true){%>
+                                                <a class="dropdown-item text-danger" href="/admin/unListCategory?id=<%=category._id %>">Un List</a>
+                                                <%}else{%>
+                                                    <a class="dropdown-item" href="/admin/reListCategory?id=<%=category._id %>">Re List</a>
+                                                    <%}%>   
+                                            </div>
+                                        </div> <!-- dropdown //end -->
+                                    </td>
+                                </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div> <!-- .col// -->
+            </div> <!-- .row // -->
+        </div> <!-- card body .// -->
+    </div> <!-- card .// -->
+</section> <!-- content-main end// -->
+
+<%- include('../layouts/adminFooter.ejs')%>

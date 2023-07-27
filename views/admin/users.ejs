@@ -1,0 +1,68 @@
+
+<%- include('../layouts/adminHeader.ejs')%>
+
+<section class="content-main">
+    <div class="content-header">
+        <h2 class="content-title">Users list</h2>
+        
+    </div>
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Mobile</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <% user.forEach(user => { %>
+                    <tbody>
+                        <tr>
+                            <td width="30%">
+                                <a href="#" class="itemside">
+                                    <div class="info pl-3">
+                                        <h6 class="mb-0 title"><%= user.fname+' '+user.lname %></h6>
+                      
+                                    </div>
+                                </a>
+                            </td>
+                            <td width="20%"><%= user.email %></td>
+                            <td><%= user.mobile %></span></td>
+                            <% if (user.is_blocked == false) { %>
+                              <td><span class="badge rounded-pill alert-success">Active</span></td>
+                            <% } else { %> 
+                              <td><span class="badge rounded-pill alert-warning">Blocked</span></td>
+                            <% } %>
+                            <td>
+                              <div class="dropdown col-lg-2 col-sm-2 col-4 col-action text-start">
+                                <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
+                                <div class="dropdown-menu">
+                                    <!-- <a class="dropdown-item" href="/admin/deleteUser?id=<%= user._id %>">Delete</a> -->
+                                    <% if (user.is_blocked == false) { %>
+                                      <a class="dropdown-item" href="/admin/blockUser?id=<%= user._id %>">Block User</a>
+                                      <% } else { %>
+                                        <a class="dropdown-item" href="/admin/unBlockUser?id=<%= user._id %>">Unblock User</a>
+                                        <% } %>
+
+                                </div>
+                            </div>
+                              </div>
+                            </td>
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                </table> <!-- table-responsive.// -->
+            </div>
+        </div> <!-- card-body end// -->
+    </div> <!-- card end// -->
+    
+ 
+</section>
+ 
+</section>
+
+<%- include('../layouts/adminFooter.ejs')%>

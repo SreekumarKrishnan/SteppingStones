@@ -1,0 +1,104 @@
+<%- include('../layouts/adminHeader')%>
+
+<form action="/admin/UpdateProduct" method="post" enctype="multipart/form-data">
+    <section class="content-main">
+    
+        <div class="row">
+            <div class="col-6">
+                <div class="content-header">
+                    <h2 class="content-title">Update Product</h2>
+                    <div>
+                        <input class="btn btn-md rounded font-sm hover-up" value="Add" type="submit"></input>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- <div class="col-md-3">
+                                <h6>1. General info</h6>
+                            </div> -->
+                            <div class="col-md-9">
+                                <div class="mb-4">
+                                    <label class="form-label">Product title</label>
+                                    <input type="text" placeholder="Type here" class="form-control" name="name" value="<%=product.name%> ">
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Description</label>
+                                    <textarea placeholder="Type here" class="form-control" rows="4" name="description"><%=product.description%></textarea>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Category</label>
+                                    
+                                    <select class="form-select" name="category">
+                                        <% category.forEach(function(category) { %>
+                                        <option value="<%= category._id %>"><%= category.name %>
+                                        </option>
+                                        <% }); %>
+                                    </select>
+                                </div>
+                            </div> <!-- col.// -->
+                        </div> <!-- row.// -->
+                        <hr class="mb-4 mt-0">
+                        <div class="row">
+                            <!-- <div class="col-md-3">
+                                <h6>2. Pricing</h6>
+                            </div> -->
+                            <div class="col-md-9">
+                                <div class="mb-4">
+                                    <label class="form-label">Cost in INR</label>
+                                    <input type="number" placeholder="00.0" class="form-control" name="price" value="<%=product.price%>">
+                                </div>
+                            </div> <!-- col.// -->
+                        </div> <!-- row.// -->
+                        <hr class="mb-4 mt-0">
+                        <div class="row">
+                            <!-- <div class="col-md-3">
+                                <h6>2. Pricing</h6>
+                            </div> -->
+                            <div class="col-md-9">
+                                <div class="mb-4">
+                                    <label class="form-label">Stock</label>
+                                    <input type="number" placeholder="Enter Quandity" class="form-control" name="stock" value="<%=product.stock%>">
+                                </div>
+                            </div> <!-- col.// -->
+                        </div> <!-- row.// -->
+                        
+                        <hr class="mb-4 mt-0">
+                        <div class="row">
+                            <!-- <div class="col-md-3">
+                                <h6>4. Media</h6>
+                            </div> -->
+                            <div class="col-md-9">
+                                <div class="mb-4">
+                                    <label class="form-label">Main Image</label>
+                                    <input class="form-control" type="file" name="images">
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="mb-4">
+                                    <label class="form-label">Second Image</label>
+                                    <input class="form-control" type="file" name="images">
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="mb-4">
+                                    <label class="form-label">Third Image</label>
+                                    <input class="form-control" type="file" name="images">
+                                </div>
+                            </div> <!-- col.// -->
+                        </div> <!-- .row end// -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        <input type="hidden" value="<%=product._id%>" name="id" >
+    </form>
+    <p><%=(typeof message!=='undefined')?message:""%></p>
+    </section> <!-- content-main end// -->
+
+<%-include('../layouts/adminFooter')%>

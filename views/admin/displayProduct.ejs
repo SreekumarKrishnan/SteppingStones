@@ -1,0 +1,93 @@
+<%- include('../layouts/adminHeader.ejs')%>
+
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Products List</h2>
+        
+        </div>
+        <div>
+    
+            <a href="/admin/addProduct" class="btn btn-primary btn-sm rounded">Create new</a>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Stock</th>
+                        <th>Status</th>
+                        <th> Action </th>
+                    </tr>
+                </thead>
+                <% product.forEach((item) => { %>
+                <tbody>
+                    <tr>
+                        <td width="30%">
+                            <a href="#" class="itemside">
+                                <div class="info pl-3">
+                                    <h6 class="mb-0 title"><img src="../product-images/<%= item.images[0]%>" width="50px" height="50px" class="img-sm img-thumbnail" alt="Item"></h6>
+                  
+                                </div>
+                                <h6 class="mb-0 tooltip-ellipsis" title="<%= item.name %>"><%= item.name %></h6>
+
+                            </a>
+                        </td>
+
+                        <td title="<%= item.description %>" class="tooltip-ellipsis"><%= item.description %></td>
+
+                        <td ><i class="fa fa-inr" aria-hidden="true"></i><%= item.category.name %></td>
+
+                        <td ><i class="fa fa-inr" aria-hidden="true"></i><%= item.price %></td>
+
+                        <td><i class="fa fa-inr" aria-hidden="true"></i><%= item.stock %></td>
+                        
+                        <%if(item.isProductListed==true && item.isListed == true){%>
+                          <td><span class="badge rounded-pill alert-success">Active</span></td>
+                        <% } else { %> 
+                          <td><span class="badge rounded-pill alert-warning">Unlisted</span></td>
+                        <% } %>
+                        <td>
+                          <div class="dropdown col-lg-2 col-sm-2 col-4 col-action text-start">
+                            <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
+                            <div class="dropdown-menu text-end">
+                                <a class="dropdown-item" href="/admin/loadUpdateProduct?id=<%= item._id %>">Edit</a>
+                                <%if(item.isProductListed==true && item.isListed == true){%>
+                                    <a class="dropdown-item text-danger" href="/admin/unListProduct?id=<%= item._id %>">Un List</a>
+                                  <% } else { %>
+                                    <a class="dropdown-item" href="/admin/reListProduct?id=<%= item._id %>">Re List</a>
+                                    <% } %>
+
+                            </div>
+                        </div>
+                          </div>
+                        </td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+</section>
+    
+
+
+
+<%- include('../layouts/adminFooter.ejs')%>

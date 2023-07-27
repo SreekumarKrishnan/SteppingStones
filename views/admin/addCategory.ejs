@@ -1,0 +1,39 @@
+<%- include('../layouts/adminHeader.ejs')%>
+
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Categories </h2>
+            <p>Add category</p>
+        </div>
+        <div>
+            <input type="text" placeholder="Search Categories" class="form-control bg-white">
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <form method="post" action="/admin/createCategory">
+                        <div class="mb-4">
+                            <label for="product_name" class="form-label">Name</label>
+                            <input type="text" placeholder="Type here" class="form-control" id="product_name" name="name"/>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label ">Description</label>
+                            <textarea placeholder="Type here" class="form-control ellipsis-text" name="description" style=" text-overflow: ellipsis;"></textarea>
+                        </div>
+                        <div class="d-grid">
+                            <button class="btn btn-primary">Create category</button>
+                        </div>
+                    </form>
+                    <p><%=(typeof message!=='undefined')?message:""%></p>
+
+                </div>
+             <!-- .col// -->
+            </div> <!-- .row // -->
+        </div> <!-- card body .// -->
+    </div> <!-- card .// -->
+</section> <!-- content-main end// -->
+
+<%- include('../layouts/adminFooter.ejs')%>
