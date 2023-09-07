@@ -95,7 +95,7 @@ const insertUser = async(req,res)=>{
    
 
     const otp =otpHelper.generateOtp();
-    //await otpHelper.sendOtp(req.body.mno,otp);
+    await otpHelper.sendOtp(req.body.mno,otp);
     console.log(`otp is ${otp}`);
 
     try {
@@ -116,7 +116,7 @@ const resendOtp = async (req,res)=>{
         }
         const otp = otpHelper.generateOtp();
         req.session.otp = otp;
-        //await otpHelper.sendOtp(req.session.mobile,req.session.otp);
+        await otpHelper.sendOtp(req.session.mobile,req.session.otp);
         console.log(`Resend otp is ${req.session.otp}`);
         res.render('verifyOtp',{message:"OTP resent successfully"});
 
