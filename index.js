@@ -1,12 +1,12 @@
 const express = require('express');
 const app = express();
+const mongoose = require('mongoose');
+mongoose.connect('mongodb+srv://sreekumartk759:vd6xIQIv74EPYurW@cluster0.3zwma2b.mongodb.net/')
 
-const connectDB = require('./configuration/connectMongoDB');
-connectDB('mongodb://127.0.0.1:27017/steppingstones');
+
 
 const userRoute = require('./routes/userRoute');
 const adminRoute = require('./routes/adminRoute');
-
 app.use(express.static(__dirname+'/public'));
 
 app.use('/',userRoute);
