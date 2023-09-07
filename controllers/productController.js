@@ -73,9 +73,12 @@ const loadUpdateProduct = async (req,res)=>{
 
 const updateProduct = async (req,res)=>{
     try {
+        const productData = await Product.findById(req.body.id);
         
         const images = req.files.map(file => file.filename);
-        await productHelper.updateProduct(req.body,images);
+        const updatedImages = images.length === 3 ? images : productData.images;
+
+        await productHelper.updateProduct(req.body,updatedImages);
         res.redirect('/admin/displayProduct');
     } catch (error) {
         console.log(error.message);

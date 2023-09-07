@@ -1,55 +1,45 @@
 
+
 <%- include('../layouts/header.ejs')%>	
+
+
+<div>
 	<!-- start banner Area -->
+
 	<section class="banner-area">
-		<div class="container">
-			<div class="row fullscreen align-items-center justify-content-start">
-				<div class="col-lg-12">
-					<!-- <div class="active-banner-slider owl-carousel"> -->
-						<!-- single-slide -->
-						<!-- <div class="row single-slide align-items-center d-flex">
-							<div class="col-lg-5 col-md-6">
-								<div class="banner-content">
-									<h1>Nike New <br>Collection!</h1>
-									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-										dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</p>
-									<div class="add-bag d-flex align-items-center">
-										<a class="add-btn" href=""><span class="lnr lnr-cross"></span></a>
-										<span class="add-text text-uppercase">Add to Bag</span>
-									</div>
-								</div>
-							</div>
-							<div class="col-lg-7">
-								<div class="banner-img">
-									<img class="img-fluid" src="../user-assets/img/banner/banner-img.png" alt="">
-								</div>
-							</div>
-						</div> -->
-						<!-- single-slide -->
-						<!-- <div class="row single-slide">
-							<div class="col-lg-5">
-								<div class="banner-content">
-									<h1>Nike New <br>Collection!</h1>
-									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-										dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</p>
-									<div class="add-bag d-flex align-items-center">
-										<a class="add-btn" href=""><span class="lnr lnr-cross"></span></a>
-										<span class="add-text text-uppercase">Add to Bag</span>
-									</div>
-								</div>
-							</div>
-							<div class="col-lg-7">
-								<div class="banner-img">
-									<img class="img-fluid" src="img/banner/banner-img.png" alt="">
-								</div>
-							</div>
-						</div> -->
-					<!-- </div> -->
-				</div>
-			</div>
-		</div>
-	</section>
-	<!-- End banner Area -->
+        <div class="">
+            <div id="bannerSlider" class="carousel slide row fullscreen align-items-center justify-content-start"
+                data-ride="carousel">
+                <div class="carousel-inner">
+                    <% banner.forEach((banner, index) => { %>
+                    <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                        <div class="row align-items-center d-flex">
+                            <div class="col-lg-12">
+                                <div class="banner-img">
+                                    <a href="<%=banner.link%>"><img class="img-fluid" src="../banner-images/<%= banner.image %>"
+                                            alt="" style="width: 100%; height: 100vh;" alt=""></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <% }) %>
+                </div>
+                <a class="carousel-control-prev" href="#bannerSlider" role="button" data-slide="prev"
+                    style="align-items:end; margin-bottom: 10px;">
+                    <img src="../user-assets/img/banner/prev.png" style="margin-bottom: 75px;">
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#bannerSlider" role="button" data-slide="next"
+                    style="align-items:end;margin-bottom: 10px;">
+                    <img src="../user-assets/img/banner/next.png" style="margin-bottom: 75px;">
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+    </section>
+    <!-- End banner Area -->
+</div>
+	 
 
 	<!-- start features Area -->
 	<section class="features-area section_gap">
@@ -101,7 +91,7 @@
 	<!-- end features Area -->
 
 	<!-- Start category Area -->
-	<section class="category-area">
+	<!-- <section class="category-area">
 		<div class="container">
 			<div class="row justify-content-center">
 				<div class="col-lg-8 col-md-12">
@@ -165,13 +155,13 @@
 				</div>
 			</div>
 		</div>
-	</section>
+	</section> -->
 	<!-- End category Area -->
 
 	<!-- start product Area -->
-	<section class="owl-carousel active-product-area section_gap">
+	<!-- <section class="owl-carousel active-product-area section_gap"> -->
 		<!-- single product slide -->
-		<div class="single-product-slider">
+		<!-- <div class="single-product-slider">
 			<div class="container">
 				<div class="row justify-content-center">
 					<div class="col-lg-6 text-center">
@@ -183,9 +173,9 @@
 						</div>
 					</div>
 				</div>
-				<div class="row">
+				<div class="row"> -->
 					<!-- single product -->
-					<div class="col-lg-3 col-md-6">
+					<!-- <div class="col-lg-3 col-md-6">
 						<div class="single-product">
 							<img class="img-fluid" src="img/product/p1.jpg" alt="">
 							<div class="product-details">
@@ -216,9 +206,9 @@
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> -->
 					<!-- single product -->
-					<div class="col-lg-3 col-md-6">
+					<!-- <div class="col-lg-3 col-md-6">
 						<div class="single-product">
 							<img class="img-fluid" src="img/product/p2.jpg" alt="">
 							<div class="product-details">
@@ -249,9 +239,9 @@
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> -->
 					<!-- single product -->
-					<div class="col-lg-3 col-md-6">
+					<!-- <div class="col-lg-3 col-md-6">
 						<div class="single-product">
 							<img class="img-fluid" src="img/product/p3.jpg" alt="">
 							<div class="product-details">
@@ -281,9 +271,9 @@
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> -->
 					<!-- single product -->
-					<div class="col-lg-3 col-md-6">
+					<!-- <div class="col-lg-3 col-md-6">
 						<div class="single-product">
 							<img class="img-fluid" src="img/product/p4.jpg" alt="">
 							<div class="product-details">
@@ -314,9 +304,9 @@
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> -->
 					<!-- single product -->
-					<div class="col-lg-3 col-md-6">
+					<!-- <div class="col-lg-3 col-md-6">
 						<div class="single-product">
 							<img class="img-fluid" src="img/product/p5.jpg" alt="">
 							<div class="product-details">
@@ -347,9 +337,9 @@
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> -->
 					<!-- single product -->
-					<div class="col-lg-3 col-md-6">
+					<!-- <div class="col-lg-3 col-md-6">
 						<div class="single-product">
 							<img class="img-fluid" src="img/product/p6.jpg" alt="">
 							<div class="product-details">
@@ -380,9 +370,9 @@
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> -->
 					<!-- single product -->
-					<div class="col-lg-3 col-md-6">
+					<!-- <div class="col-lg-3 col-md-6">
 						<div class="single-product">
 							<img class="img-fluid" src="img/product/p7.jpg" alt="">
 							<div class="product-details">
@@ -413,9 +403,9 @@
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> -->
 					<!-- single product -->
-					<div class="col-lg-3 col-md-6">
+					<!-- <div class="col-lg-3 col-md-6">
 						<div class="single-product">
 							<img class="img-fluid" src="img/product/p8.jpg" alt="">
 							<div class="product-details">
@@ -449,9 +439,9 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> -->
 		<!-- single product slide -->
-		<div class="single-product-slider">
+		<!-- <div class="single-product-slider">
 			<div class="container">
 				<div class="row justify-content-center">
 					<div class="col-lg-6 text-center">
@@ -463,9 +453,9 @@
 						</div>
 					</div>
 				</div>
-				<div class="row">
+				<div class="row"> -->
 					<!-- single product -->
-					<div class="col-lg-3 col-md-6">
+					<!-- <div class="col-lg-3 col-md-6">
 						<div class="single-product">
 							<img class="img-fluid" src="img/product/p6.jpg" alt="">
 							<div class="product-details">
@@ -496,9 +486,9 @@
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> -->
 					<!-- single product -->
-					<div class="col-lg-3 col-md-6">
+					<!-- <div class="col-lg-3 col-md-6">
 						<div class="single-product">
 							<img class="img-fluid" src="img/product/p8.jpg" alt="">
 							<div class="product-details">
@@ -529,9 +519,9 @@
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> -->
 					<!-- single product -->
-					<div class="col-lg-3 col-md-6">
+					<!-- <div class="col-lg-3 col-md-6">
 						<div class="single-product">
 							<img class="img-fluid" src="img/product/p3.jpg" alt="">
 							<div class="product-details">
@@ -562,9 +552,9 @@
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> -->
 					<!-- single product -->
-					<div class="col-lg-3 col-md-6">
+					<!-- <div class="col-lg-3 col-md-6">
 						<div class="single-product">
 							<img class="img-fluid" src="img/product/p5.jpg" alt="">
 							<div class="product-details">
@@ -595,9 +585,9 @@
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> -->
 					<!-- single product -->
-					<div class="col-lg-3 col-md-6">
+					<!-- <div class="col-lg-3 col-md-6">
 						<div class="single-product">
 							<img class="img-fluid" src="img/product/p1.jpg" alt="">
 							<div class="product-details">
@@ -628,9 +618,9 @@
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> -->
 					<!-- single product -->
-					<div class="col-lg-3 col-md-6">
+					<!-- <div class="col-lg-3 col-md-6">
 						<div class="single-product">
 							<img class="img-fluid" src="img/product/p4.jpg" alt="">
 							<div class="product-details">
@@ -661,9 +651,9 @@
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> -->
 					<!-- single product -->
-					<div class="col-lg-3 col-md-6">
+					<!-- <div class="col-lg-3 col-md-6">
 						<div class="single-product">
 							<img class="img-fluid" src="img/product/p1.jpg" alt="">
 							<div class="product-details">
@@ -694,9 +684,9 @@
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> -->
 					<!-- single product -->
-					<div class="col-lg-3 col-md-6">
+					<!-- <div class="col-lg-3 col-md-6">
 						<div class="single-product">
 							<img class="img-fluid" src="img/product/p8.jpg" alt="">
 							<div class="product-details">
@@ -730,7 +720,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> -->
 	</section>
 	<!-- end product Area -->
 
@@ -809,7 +799,7 @@
 	<!-- End exclusive deal Area -->
 
 	<!-- Start brand Area -->
-	<section class="brand-area section_gap">
+	<!-- <section class="brand-area section_gap">
 		<div class="container">
 			<div class="row">
 				<a class="col single-img" href="#">
@@ -829,11 +819,11 @@
 				</a>
 			</div>
 		</div>
-	</section>
+	</section> -->
 	<!-- End brand Area -->
 
 	<!-- Start related-product Area -->
-	<section class="related-product-area section_gap_bottom">
+	<!-- <section class="related-product-area section_gap_bottom">
 		<div class="container">
 			<div class="row justify-content-center">
 				<div class="col-lg-6 text-center">
@@ -966,7 +956,45 @@
 				</div>
 			</div>
 		</div>
-	</section>
+	</section> -->
 	<!-- End related-product Area -->
 
     <%- include('../layouts/footer.ejs') %>	
+	<style>
+		html,
+		body {
+			overflow-x: hidden;
+			max-width: 100%;
+		}
+	
+		/* Adjustments for smaller screens */
+		@media (max-width: 768px) {
+			.banner-img img {
+				height: auto;
+				
+			}
+		}
+	
+		/* Adjustments for even smaller screens */
+		@media (max-width: 576px) {
+			.banner-img img {
+				width: 100%;
+			}
+		}
+	</style>
+
+	<script>
+        // Set the interval time (in milliseconds)
+        const intervalTime = 5000; // Change this value to adjust the scrolling speed
+
+        // Get the banner slider element
+        const bannerSlider = document.querySelector('#bannerSlider');
+
+        // Function to scroll the slider
+        const scrollSlider = () => {
+            $('.carousel').carousel('next');
+        };
+
+        // Start the interval to scroll the slider
+        setInterval(scrollSlider, intervalTime);
+    </script>

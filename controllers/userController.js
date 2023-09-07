@@ -6,6 +6,7 @@ const otpHelper = require('../helpers/otpHelper');
 const userHelper = require('../helpers/userHelper');
 const Category = require('../models/categoryModel');
 const Product = require('../models/productModel');
+const Banner = require('../models/bannerModel');
 
 const maxAge = 3*24*60*60;
 const createToken = (id)=>{
@@ -29,7 +30,10 @@ const securePassword = async(password)=>{
 
 const homeLoad = async(req,res)=>{
     try {
-        res.render('home');
+        
+        const banner = await Banner.find({}) 
+        const category = await Category.find({ })
+        res.render("home",{user:res.locals.user,category,banner})
     } catch (error) {
         console.log(error.message);
     }
@@ -43,20 +47,26 @@ const loadSignup = async (req,res)=>{
 }
 const loadLogin = async (req,res)=>{
     try {
-        res.render('login');
+        if(res.locals.user){
+            res.redirect('/');
+        }else{
+            res.render('login');
+        }
+        
     } catch (error) {
         console.log(error.message);
     }
 }
 const insertUser = async(req,res)=>{
     //need destructuring
-    const email = req.body.email;
-    const mobileNumber = req.body.mno
+    
+    const {fname, lname, email, mno, password, confPassword } = req.body;
+    
     const existingUser = await User.findOne({email:email})
-    if (!req.body.fname || req.body.fname.trim().length === 0) {
+    if (!fname || fname.trim().length === 0) {
         return res.render("signup", { message: "Name is required" });
     }
-    if (/\d/.test(req.body.fname) || /\d/.test(req.body.lname)) {
+    if (/\d/.test(fname) || /\d/.test(lname)) {
         return res.render("signup", { message: "Name should not contain numbers" });
       }
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -67,20 +77,19 @@ const insertUser = async(req,res)=>{
       return res.render("signup",{message:"Email already exists"})
     }
     const mobileNumberRegex = /^\d{10}$/;
-    if (!mobileNumberRegex.test(mobileNumber)) {
+    if (!mobileNumberRegex.test(mno)) {
         return res.render("signup", { message: "Mobile Number should have 10 digit" });
 
     }
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
-    if(!passwordRegex.test(req.body.password)){
+    if(!passwordRegex.test(password)){
         return res.render("signup", { message: "Password Should Contain atleast 8 characters,one number and a special character" });
     }
-    console.log(req.body.password);
-    console.log(req.body.confPassword);
+
    
 
 
-    if(req.body.password!=req.body.confPassword){
+    if(password!= confPassword){
         return res.render("signup", { message: "Password and Confirm Password must be same" });
     }
    
@@ -229,16 +238,92 @@ const setNewPassword = async(req,res)=>{
    }
 }
 
-const displayProduct = async (req, res) => {
+const editInfo = async (req, res) => {
     try {
-      const category = await Category.find({});
-      
-      const products = await Product.find({ $and: [{ isListed: true }, { isProductListed: true }] })
-        .populate('category');
-      
-      res.render('shop', { product: products, category });
+      const userId = res.locals.user._id;
+      const { fname, lname, email, mobile } = req.body;
+  
+      const result = await User.updateOne(
+        { _id: userId }, // Specify the user document to update based on the user ID
+        { $set: { fname, lname, email, mobile } } // Set the new field values
+      );
+  
+      res.redirect("/profile");
     } catch (error) {
       console.log(error.message);
+      res.redirect('/error-500')
+
+    }
+  };
+  
+const editPassword = async (req, res) => {
+    try {
+      const newPass = req.body.newPassword;
+      // const confPass = req.body.confPass;
+      const userId = res.locals.user._id;
+        const spassword = await securePassword(newPass);
+  
+        const result = await User.updateOne(
+          { _id: userId },
+          { $set: { password: spassword } }
+        );
+  
+        res.send({status:true});
+      
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const displayProduct = async (req, res) => {
+    try {
+      const category = await Category.find({});
+      const page = parseInt(req.query.page) || 1;
+      const limit = 2;
+      const skip = (page - 1) * limit; // Calculate the number of products to skip
+      const searchQuery = req.query.search || ''; // Get the search query from request query parameters
+      const sortQuery = req.query.sort || 'default'; // Get the sort query from request query parameters (default value is 'default')
+      const minPrice = parseFloat(req.query.minPrice); // Get the minimum price from request query parameters
+      const maxPrice = parseFloat(req.query.maxPrice)
+
+  
+      // Build the search filter
+      const searchFilter = {
+        $and: [
+          { isListed: true },
+          { isProductListed: true },
+          {
+            $or: [
+              { name: { $regex: new RegExp(searchQuery, 'i') } },
+            ],
+          },
+        ],
+      };
+      if (!isNaN(minPrice) && !isNaN(maxPrice)) {
+        searchFilter.$and.push({ price: { $gte: minPrice, $lte: maxPrice } });
+      }
+
+      let sortOption = {};
+      if (sortQuery === 'price_asc' ||sortQuery === 'default' ) {
+        sortOption = { price: 1 }; 
+      } else if (sortQuery === 'price_desc') {
+        sortOption = { price: -1 }; 
+      }
+  
+      const totalProducts = await Product.countDocuments(searchFilter); // Get the total number of products matching the search query
+      const totalPages = Math.ceil(totalProducts / limit); // Calculate the total number of pages
+  
+      const products = await Product.find(searchFilter)
+        .skip(skip)
+        .limit(limit)
+        .sort(sortOption)
+        .populate('category');
+  
+      res.render('shop', { product: products, category, currentPage: page, totalPages });
+    } catch (error) {
+      console.log(error.message);
+      res.redirect('/error-500')
+
     }
   };
 
@@ -271,5 +356,7 @@ module.exports={
     resetPasswordOtpVerify,
     setNewPassword,
     displayProduct,
-    categoryPage
+    categoryPage,
+    editInfo,
+    editPassword
 }

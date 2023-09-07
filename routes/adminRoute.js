@@ -3,6 +3,8 @@ const adminRoute = express();
 const adminController = require('../controllers/adminController');
 const categoryController = require('../controllers/categoryController');
 const productController = require('../controllers/productController');
+const couponController = require('../controllers/couponController');
+const bannerController = require('../controllers/bannerController');
 const session = require('express-session');
 const cookieparser = require('cookie-parser');
 const nocache = require('nocache');
@@ -27,6 +29,7 @@ adminRoute.use(express.urlencoded({extended:true}));
 adminRoute.use(cookieparser());
 adminRoute.all('*',validate.checkUser);
 
+adminRoute.get('/dashboard',validate.requireAuth,adminController.loadDashboard);
 adminRoute.get('/',adminController.loadLogin);
 adminRoute.post('/login',adminController.verifyLogin);
 adminRoute.get('/users',adminController.loadUsers);
@@ -49,7 +52,26 @@ adminRoute.get('/unListProduct',productController.unListProduct);
 adminRoute.get('/reListProduct',productController.reListProduct);
 adminRoute.get('/loadUpdateProduct',validate.requireAuth,productController.loadUpdateProduct);
 adminRoute.post('/updateProduct',multer.upload,productController.updateProduct);
+  
+adminRoute.get('/orderList',validate.requireAuth,adminController.orderList);
+adminRoute.get('/orderDetails',validate.requireAuth,adminController.orderDetails)
+adminRoute.put('/orderStatus',adminController.changeStatus);
+adminRoute.put('/cancelOrder',adminController.cancelOrder);
+adminRoute.put('/returnOrder',adminController.returnOrder);
 
+adminRoute.get('/couponList',validate.requireAuth,couponController.couponList)
+adminRoute.get('/addCoupon',validate.requireAuth,couponController.loadCouponAdd)
+adminRoute.get('/generate-coupon-code',validate.requireAuth,couponController.generateCouponCode)
+adminRoute.post('/addCoupon',couponController.addCoupon)
+adminRoute.delete('/removeCoupon',couponController.removeCoupon)
+
+adminRoute.get('/salesReport',validate.requireAuth,adminController.getSalesReport)
+adminRoute.post('/salesReport',adminController.postSalesReport)
+
+adminRoute.get('/bannerList',validate.requireAuth,bannerController.bannerList)
+adminRoute.get('/addBanner',validate.requireAuth,bannerController.addBannerGet)
+adminRoute.post('/addBanner',multer.addBannerupload,bannerController.addBannerPost)
+adminRoute.get('/deleteBanner',bannerController.deleteBanner)
 
 
 

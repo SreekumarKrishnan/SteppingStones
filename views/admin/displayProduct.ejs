@@ -86,8 +86,43 @@
             </table>
         </div>
 </section>
+
+
     
 
 
 
 <%- include('../layouts/adminFooter.ejs')%>
+
+<style>
+    .tooltip-ellipsis {
+  max-width: 200px; /* Adjust the maximum width as needed */
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  position: relative;
+  cursor: help;
+}
+
+.tooltip-ellipsis::after {
+  content: attr(title);
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 8px;
+  background-color: #000;
+  color: #fff;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s;
+}
+
+.tooltip-ellipsis:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+</style>

@@ -1,0 +1,137 @@
+<%- include('../layouts/header.ejs')%>
+
+<section class="cart_area" style="margin-top: 90px;">
+    <div class="container">
+        <div class="cart_inner">
+
+          <%if(wishlistProducts.length!=0) {%>
+            
+            <div class="table-responsive">
+             
+                <table class="table shopping-summery text-center">
+                    <thead>
+                      <tr class="main-heading">
+                        <th scope="col">Product</th>
+                        <th scope="col" colspan="1">Details</th>
+                        <th scope="col"colspan="1">Price</th>
+                        <!-- <th scope="col">Stock Status</th> -->
+                        <th scope="col">Action</th>
+                        <th scope="col">Remove</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% wishlistProducts.forEach(function(item) { %>
+      
+      
+                      <tr>
+                        <td class="image product-thumbnail"><img src="../product-images/<%=item.wishListed.images[0]%>" alt="#"  width="100px" height="115px" ></td>
+                        <!-- <div class="d-flex">
+                            <img src="../product-images/<%=item.wishListed.images[0]%>" width="50px" height="50px"  alt="">
+                        </div> -->
+                        <td class="product-des product-name">
+                          <h5 class="product-name"><a href="/productPage?id=<%=item.wishListed._id %>"><%=item.wishListed.name%></a></h5>
+                          <p class="font-xs"><%=item.wishListed.description%>
+                          </p>
+                        </td>
+                        <td class="price" data-title="Price"><span>₹<%=item.wishListed.price%></span></td>
+                        <!-- <td class="text-center" data-title="Stock">
+                          <span class="color3 font-weight-bold">In Stock</span>
+                        </td> -->
+                        <td class="text-right" data-title="Cart">
+                          <button class="btn btn-sm cool-button" onclick="addtocart('<%=item.productId%>')">
+                            <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                          </button>
+      
+                        </td>
+                        <td class="action" data-title="Remove" onclick="removeFromWishList('<%=item.productId%>')"><a href="#"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+                        
+                      </tr>
+                      <% }); %>
+                    </tbody>
+                  </table>
+                
+
+            </div>
+         <% }else{%>
+
+
+          <div style="display: flex; justify-content: center;">
+            <div class="col-md-lg-5">
+                <div class="typography" style="text-align: center;">
+                    <img style="width: 295px;" src="../images/wish.jpg" alt="">
+                    <h3>Oops! Your Wish List is empty</h3>
+                </div>
+            </div>
+        </div>
+        
+          <%  } %>
+
+         
+
+        
+
+
+
+        </div>
+    </div>
+</section>
+
+<%- include('../layouts/footer.ejs')%>
+
+
+<script>
+
+  function addtocart(proId) {
+    $.ajax({
+    url: '/addToCart/' + proId,
+    method: 'POST',
+  
+    success: (response) => {
+      if (response.status==true) {
+      Swal.fire({
+        title: 'Added To Cart',
+        text: 'Your Product has been added to Cart',
+        icon: 'success',
+        timer: 5000
+      })
+      
+      }else if(response.status=='outOfStock'){
+      Swal.fire({
+        title: 'Out of Stock',
+        text: 'Product Out Of Stock',
+        icon: 'error',
+        timer: 5000
+      })
+      }
+    }
+    })
+  }
+
+    
+      // remove from wishList ajax call
+      function removeFromWishList(proId) {
+
+        event.preventDefault()
+
+        console.log("hereeeeeeeeeeeeee");
+        $.ajax({
+          url: '/remove-product-wishlist',
+          method: 'DELETE',
+          data: {
+            proId: proId,
+            
+          },
+          success: (response) => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Product removed from wishlist',
+              showConfirmButton: true,
+              timer: 3000
+            }).then(() => {
+              location.reload()
+            })
+          }
+        })
+      }
+     
+    </script>

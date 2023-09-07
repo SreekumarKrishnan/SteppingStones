@@ -35,19 +35,16 @@
             <div class="col-lg-6">
                 <div class="login_form_inner">
                     <h3>Log in to enter</h3>
-                    <form class="row login_form" action="/login" method="post" id="contactForm" novalidate="novalidate">
+                    <form class="row login_form" id="myForm" action="/login" method="post" >
                         <div class="col-md-12 form-group">
-                            <input type="text" class="form-control" id="name" name="email" placeholder="Email" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Username'" >
+                            <input type="text" class="form-control" id="email" name="email" placeholder="Email" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Username'" onkeyup="emailValidation()" >
+                            <span id="emailError" class="text-danger"></span>
                         </div>
                         <div class="col-md-12 form-group">
-                            <input type="password" class="form-control" id="name" name="password" placeholder="Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'" >
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'" onkeyup="passwordValidation()" >
+                            <span id="passwordError" class="text-danger"></span>
                         </div>
-                        <div class="col-md-12 form-group">
-                            <div class="creat_account">
-                                <input type="checkbox" id="f-option2" name="selector">
-                                <label for="f-option2">Keep me logged in</label>
-                            </div>
-                        </div>
+                       
                         <div class="col-md-12 form-group">
                             <button type="submit" value="submit" class="primary-btn">Log In</button>
                             <a href="/forgotPassword">Forgot Password?</a>
@@ -63,3 +60,58 @@
 
 
 <%- include('../layouts/footer.ejs')%>
+
+<script>
+    const myForm = document.getElementById("myForm")
+
+
+  
+    const email = document.getElementById("email")
+    const password = document.getElementById("password")
+    
+    const emailError = document.getElementById("emailError")
+    const passwordError = document.getElementById("passwordError")
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    function emailValidation(){
+        const emailValue = email.value
+        if(!emailValue.match(emailRegex)){
+            emailError.innerHTML = 'Email not valid'
+            emailError.style.color = 'red'
+            email.style.border = "solid 2px red";
+            return false;
+        }
+        emailError.innerHTML = ""
+        emailError.style.color = "green"
+        email.style.border = "solid 2px green";
+        return true
+    }
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
+    function passwordValidation(){
+        const passwordValue = password.value
+        if(!passwordValue.match(passwordRegex)){
+            passwordError.innerHTML = 'Password should contain atleast 8 characters 1 number and a special chara'
+            passwordError.style.color = 'red'
+            password.style.border = "solid 2px red";
+            return false;
+        }
+        passwordError.innerHTML = ""
+        passwordError.style.color = "green"
+        password.style.border = "solid 2px green";
+        return true
+    }
+  
+
+    myForm.addEventListener("submit",(event)=>{
+        event.preventDefault();
+        if(!emailValidation() || !passwordValidation()) {
+            return false
+        }else{
+            myForm.submit()
+        }
+
+    })
+
+
+</script>

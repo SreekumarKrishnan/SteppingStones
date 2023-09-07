@@ -1,6 +1,82 @@
 <%- include('../layouts/adminHeader')%>
 
-<form action="/admin/UpdateProduct" method="post" enctype="multipart/form-data">
+<style>
+  /* Styling for the modal overlay */
+  .modal {
+    display: none; /* Initially hidden */
+    position: fixed; /* Fixed position, covering the entire viewport */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black background */
+    z-index: 1; /* Puts the modal above other content */
+    overflow: hidden; /* Prevents content outside the modal from being scrolled */
+  }
+
+  /* Styling for the modal content */
+  .modal-content {
+    background-color: #ff0000; /* Light background color for the modal content */
+    margin: 10% auto; /* Centers the modal vertically and adds some space from the top */
+    padding: 20px; /* Adds padding around the content */
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow for a lifted appearance */
+    width: 50%; /* Width of the modal content */
+    position: relative; /* Needed for positioning the close button */
+    text-align: center; /* Center-aligns text inside the modal content */
+  }
+
+  /* Styling for the close button */
+  .close {
+    color: #aaa; /* Light gray color for the close button */
+    position: absolute; /* Positioned absolutely within the modal content */
+    top: 10px; /* Top margin for the close button */
+    right: 10px; /* Right margin for the close button */
+    font-size: 24px; /* Font size of the close button */
+    font-weight: bold;
+    cursor: pointer; /* Shows a hand cursor on hover, indicating interactivity */
+    transition: color 0.3s; /* Smooth transition for the color change */
+  }
+
+  /* Styling for the close button on hover/focus */
+  .close:hover,
+  .close:focus {
+    color: #000; /* Darkens the color when hovered or focused for better visibility */
+    text-decoration: none; /* Removes underline when hovered or focused */
+  }
+
+  /* Styling for the modal message */
+  #modalMessage {
+    font-size: 20px; /* Font size of the modal message */
+    line-height: 1.6; /* Line height for improved readability */
+    margin-top: 20px; /* Margin from the top of the modal content */
+    font-weight: 500; /* Slightly bolder font weight for the message */
+    color: #333; /* Dark gray color for the message text */
+  }
+
+  /* Animation for fading in the modal overlay */
+  .modal.fade-in {
+    animation: fade-in 0.3s ease-in-out forwards;
+  }
+
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  /* Responsive design for smaller screens */
+  @media (max-width: 768px) {
+    .modal-content {
+      width: 80%; /* Adjusts width to 80% on screens with a max width of 768px */
+    }
+  }
+</style>
+
+<form action="/admin/UpdateProduct" method="post" enctype="multipart/form-data" id="myForm">
     <section class="content-main">
     
         <div class="row">
@@ -24,11 +100,13 @@
                             <div class="col-md-9">
                                 <div class="mb-4">
                                     <label class="form-label">Product title</label>
-                                    <input type="text" placeholder="Type here" class="form-control" name="name" value="<%=product.name%> ">
+                                    <input type="text" placeholder="Type here" class="form-control" name="name" value="<%=product.name%> " id="name" onkeyup="nameValidation()">
+                                    <span id="nameError"></span>
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label">Description</label>
-                                    <textarea placeholder="Type here" class="form-control" rows="4" name="description"><%=product.description%></textarea>
+                                    <textarea placeholder="Type here" class="form-control" rows="4" name="description" id="description" onkeyup="descriptionValidation()"><%=product.description%></textarea>
+                                    <span id="descriptionError"></span>
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label">Category</label>
@@ -50,7 +128,8 @@
                             <div class="col-md-9">
                                 <div class="mb-4">
                                     <label class="form-label">Cost in INR</label>
-                                    <input type="number" placeholder="00.0" class="form-control" name="price" value="<%=product.price%>">
+                                    <input type="number" placeholder="00.0" class="form-control" name="price" value="<%=product.price%>" id="price" onkeyup="priceValidation()">
+                                    <span id="priceError"></span>
                                 </div>
                             </div> <!-- col.// -->
                         </div> <!-- row.// -->
@@ -62,35 +141,63 @@
                             <div class="col-md-9">
                                 <div class="mb-4">
                                     <label class="form-label">Stock</label>
-                                    <input type="number" placeholder="Enter Quandity" class="form-control" name="stock" value="<%=product.stock%>">
+                                    <input type="number" placeholder="Enter Quandity" class="form-control" name="stock" value="<%=product.stock%>" id="stock" onkeyup="stockValidation()">
+                                    <span id="stockError"></span>
                                 </div>
                             </div> <!-- col.// -->
                         </div> <!-- row.// -->
                         
                         <hr class="mb-4 mt-0">
                         <div class="row">
-                            <!-- <div class="col-md-3">
-                                <h6>4. Media</h6>
-                            </div> -->
-                            <div class="col-md-9">
-                                <div class="mb-4">
-                                    <label class="form-label">Main Image</label>
-                                    <input class="form-control" type="file" name="images">
+                            <div class="col-lg-6">
+                                <div class="card mb-4">
+                                  <div class="card-header">
+                                    <h4>Media</h4>
+                                  </div>
+                                  <div class="input-upload">
+                                    <img src="/imgs/theme/upload.svg" id="imgView1" alt="">
+                                    <input class="form-control" id="input1" name="file" onchange="viewImage1(event),viewImage(event, 1),validateImage(event, 1)" type="file">
+                                  </div>
+                                  <div class="image-cropper" style="display:none;">
+                                    <img src="" id="croppedImg1" alt="">
+                                    <button type="button" id="saveButton1" class="btn-sm btn-primary">Save</button>
+                                  </div>
+                      
+                                </div> <!-- card end// -->
+                              </div>
+                              <div class="col-lg-6">
+                                <div class="card mb-4">
+                                  <div class="card-header">
+                                    <h4>Media</h4>
+                                  </div>
+                                  <div class="input-upload">
+                                    <img src="/imgs/theme/upload.svg" id="imgView2" alt="">
+                                    <input class="form-control" id="input1" name="file" onchange="viewImage2(event),viewImage(event, 2),validateImage(event, 2)" type="file">
+                                  </div>
+                                  <div class="image-cropper" style="display:none;">
+                                    <img src="" id="croppedImg2" alt="">
+                                    <button type="button" id="saveButton2" class="btn-sm btn-primary">Save</button>
+                                  </div>
+                      
+                                </div> <!-- card end// -->
+                              </div>
+                              <div class="col-lg-6">
+                                <div class="card mb-4">
+                                  <div class="card-header">
+                                    <h4>Media</h4>
+                                  </div>
+                                  <div class="input-upload">
+                                    <img src="/imgs/theme/upload.svg" id="imgView3" alt="">
+                                    <input class="form-control" id="input3" name="file" onchange="viewImage3(event),viewImage(event, 3),validateImage(event, 3)" type="file">
+                                  </div>
+                                  <div class="image-cropper" style="display:none;">
+                                    <img src="" id="croppedImg3" alt="">
+                                    <button type="button" id="saveButton3" class="btn-sm btn-primary">Save</button>
+                                  </div>
+                      
                                 </div>
-                            </div>
-                            <div class="col-md-9">
-                                <div class="mb-4">
-                                    <label class="form-label">Second Image</label>
-                                    <input class="form-control" type="file" name="images">
-                                </div>
-                            </div>
-                            <div class="col-md-9">
-                                <div class="mb-4">
-                                    <label class="form-label">Third Image</label>
-                                    <input class="form-control" type="file" name="images">
-                                </div>
-                            </div> <!-- col.// -->
-                        </div> <!-- .row end// -->
+                          </div>
+                      </div> <!-- .row end// -->
                     </div>
                 </div>
             </div>
@@ -101,4 +208,249 @@
     <p><%=(typeof message!=='undefined')?message:""%></p>
     </section> <!-- content-main end// -->
 
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+          <span class="close">&times;</span>
+          <p id="modalMessage"></p>
+      </div>
+  </div> 
+
+  <script>
+    function viewImage1(event) {
+document.getElementById('imgView1').src = URL.createObjectURL(event.target.files[0])
+}
+
+function viewImage2(event) {
+document.getElementById('imgView2').src = URL.createObjectURL(event.target.files[0])
+}
+
+function viewImage3(event) {
+document.getElementById('imgView3').src = URL.createObjectURL(event.target.files[0])
+}
+</script>
+<script>
+function viewImage(event, index) {
+    let input = event.target;
+    let reader = new FileReader();
+
+    reader.onload = function() {
+      let dataURL = reader.result;
+      let image = document.getElementById('imgView' + index);
+      image.src = dataURL;
+
+      // Initialize Cropper.js on the image
+      let cropper = new Cropper(image, {
+        aspectRatio: 1 / 1, // Set the aspect ratio to 1:1 for square images
+        viewMode: 1, // Set the view mode to crop box
+        guides: true, // Show the crop guides
+        background: false, // Do not show the background behind the image
+        autoCropArea: 1, // Set the initial crop area to cover the whole image
+        zoomable: true // Disable zooming to keep the image size fixed
+      });
+
+      // Show the image cropper container
+      let cropperContainer = document.querySelector('#croppedImg' + index).parentNode;
+      cropperContainer.style.display = 'block';
+
+      // Update the cropped image when the "Save" button is clicked
+      let saveButton = document.querySelector('#saveButton' + index);
+      saveButton.addEventListener('click', async function() {
+        let croppedCanvas = cropper.getCroppedCanvas({
+          width: 1500, 
+          height: 1500 
+        });
+        let croppedImage = document.getElementById("croppedImg" + index);
+        croppedImage.src = croppedCanvas.toDataURL('image/jpeg', 1.0);
+
+        // Generate a unique name for the cropped image file based on the current timestamp
+        let timestamp = new Date().getTime();
+        let fileName = `cropped-img-${timestamp}-${index}.png`;
+
+        await croppedCanvas.toBlob(blob => {
+          let input = document.getElementById('input' + index)
+          let imgFile = new File([blob], fileName, blob)
+          const fileList = new DataTransfer();
+          fileList.items.add(imgFile);
+          input.files = fileList.files
+        });
+        // cropperContainer.style.display = 'none';
+      });
+
+    };
+
+    reader.readAsDataURL(input.files[0]);
+  }
+</script>
+
+
 <%-include('../layouts/adminFooter')%>
+
+
+<script>
+  // Get the modal element
+  var modal = document.getElementById("myModal");
+  var modalMessage = document.getElementById("modalMessage");
+  
+  // Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("close")[0];
+  
+  function validateImage(event, index) {
+      let input = event.target;
+      let file = input.files[0];
+      const maxFileSize = 5 * 1024 * 1024; // 5MB in bytes
+      
+      if (file) {
+          if (!file.type.startsWith('image/')) {
+              modalMessage.textContent = 'Selected file is not an image. Please select an image file.';
+              modal.style.display = "block";
+              input.value = ''; // Clear the input field
+              return;
+          }
+          
+          if (file.size > maxFileSize) {
+              modalMessage.textContent = 'Selected image is too large. Maximum allowed size is 5MB.';
+              modal.style.display = "block";
+              input.value = ''; // Clear the input field
+              return;
+          }
+          
+          // Proceed with image preview and cropping logic
+          viewImage(event, index);
+      }
+  }
+  
+  // When the user clicks on <span> (x), close the modal
+  span.onclick = function () {
+      modal.style.display = "none";
+  };
+  
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function (event) {
+      if (event.target == modal) {
+          modal.style.display = "none";
+      }
+  };
+  
+  </script>
+
+
+<script>
+  const myForm = document.getElementById("myForm")
+
+
+  const name = document.getElementById("name")
+  const description = document.getElementById("description")
+  const price = document.getElementById("price")
+  const stock = document.getElementById("stock")
+
+
+  const nameError = document.getElementById("nameError")
+  const descriptionError = document.getElementById("descriptionError")
+  const priceError = document.getElementById("priceError")
+  const stockError = document.getElementById("stockError")
+
+function nameValidation(){
+const nameValue = name.value
+if(nameValue.trim()==0){
+  nameError.innerHTML = 'Product title is required'
+  nameError.style.color = 'red'
+  name.style.border = "solid 2px red";
+  return false;
+}
+nameError.innerHTML = ""
+nameError.style.color = "green"
+name.style.border = "solid 2px green";
+return true
+  
+
+
+}
+
+
+function descriptionValidation(){
+const descriptionValue = description.value
+if(descriptionValue.trim()==0){
+  descriptionError.innerHTML = 'Descripion is required'
+  descriptionError.style.color = 'red'
+  description.style.border = "solid 2px red";
+  return false;
+}
+descriptionError.innerHTML = ""
+descriptionError.style.color = "green"
+description.style.border = "solid 2px green";
+return true
+  
+
+
+}
+
+function priceValidation(){
+const priceValue = price.value
+if(priceValue.trim()==0){
+  priceError.innerHTML = 'Price is Required'
+  priceError.style.color = 'red'
+  price.style.border = "solid 2px red";
+  return false;
+}
+if(priceValue <= 0 ){
+  priceError.innerHTML = 'Price Must be greater than zero'
+  priceError.style.color = 'red'
+  price.style.border = "solid 2px red";
+  return false;
+}
+priceError.innerHTML = ""
+priceError.style.color = "green"
+price.style.border = "solid 2px green";
+return true
+  
+
+
+}
+
+
+function stockValidation(){
+const stockValue = stock.value
+if(stockValue.trim()==0){
+  stockError.innerHTML = 'Stock is Required'
+  stockError.style.color = 'red'
+  stock.style.border = "solid 2px red";
+  return false;
+}
+if(stockValue <  0 ){
+  stockError.innerHTML = 'Stock Must be greater than or equal to zero'
+  stockError.style.color = 'red'
+  stock.style.border = "solid 2px red";
+  return false;
+}
+stockError.innerHTML = ""
+stockError.style.color = "green"
+stock.style.border = "solid 2px green";
+return true
+  
+
+
+}
+
+
+
+
+
+
+
+
+
+
+myForm.addEventListener("submit",(event)=>{
+event.preventDefault();
+if(!nameValidation() || !descriptionValidation() || ! priceValidation()) {
+  return false
+}else{
+  myForm.submit()
+}
+
+})
+
+
+
+
+</script>

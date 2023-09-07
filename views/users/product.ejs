@@ -1,5 +1,7 @@
 <%- include('../layouts/header.ejs')%>
 
+
+  
 <div class="product_image_area">
     
     <div class="container">
@@ -31,15 +33,25 @@
                     <h3><%=product.name%></h3>
                     <h2><i class="fa fa-inr" aria-hidden="true"></i> <%=product.price%></h2>
                     <ul class="list">
-                        <li><a class="active" href="#"><span>Category</span> :<%=product.category.name%></a></li>
-                        <li><a href="#"><span>Availibility</span> : In Stock</a></li>
+                        <li><a class= href="#"><span>Category</span> :<%=product.category.name.toUpperCase()%></a></li>
+                        <% if (product.stock <= 0) { %>
+                            <li><a href="#"><span>Availability</span><span style="color: red; font-weight: bolder;">: Out of Stock</span></a></li>
+                          <% } else if (product.stock <= 5) { %>
+                            <li><a href="#"><span>Availability</span>: In Stock</a></li>
+                            <span style="color: red;">Hurry,Only <%= product.stock %>   items Remaining</span>
+                          <% } else { %>
+                            <li><a href="#"><span>Availability</span>: In Stock</a></li>
+                          <% } %>
+                          
+
+
+
                     </ul>
                     <p><%=product.description%></p>
                     
                     <div class="card_area d-flex align-items-center">
                         <button class="primary-btn" onclick="addtocart('<%=product._id%>')">Add to Cart</button>
-                        <a class="icon_btn" href="#"><i class="lnr lnr lnr-diamond"></i></a>
-                        <a class="icon_btn" href="#"><i class="lnr lnr lnr-heart"></i></a>
+                        <a class="icon_btn" href="#"><i class="lnr lnr lnr-heart" onclick="addToWishList('<%=product._id%>')"></i></a>
                     </div>
                 </div>
             </div>
@@ -71,6 +83,38 @@
 
 
 <%- include('../layouts/footer.ejs')%>
+
+<script>
+		function addtocart(proId) {
+		  $.ajax({
+			url: '/addToCart/' + proId,
+			method: 'POST',
+			success: (response) => {
+                console.log("addtocart");
+			  if (response.status===true) {
+                Swal.fire({
+				  title: 'Added To Cart',
+				  text: 'Your Product has been added to Cart',
+				  icon: 'success',
+				  timer: 5000
+				})
+				
+			  }else if(response.status==='outOfStock'){
+				Swal.fire({
+				  title: 'Out of Stock',
+				  text: 'Product Out Of Stock',
+				  icon: 'error',
+				  timer: 5000
+				})
+			  }else{
+                location.href = '/login'
+
+              }
+			},
+            
+		  })
+		}
+	</script>
 
 <style>
     .zoom-image-container {

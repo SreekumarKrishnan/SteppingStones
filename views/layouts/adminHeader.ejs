@@ -17,8 +17,59 @@
     <link rel="shortcut icon" type="image/x-icon" href="assets/igs/theme/favicon.svg">
     <!-- Template CSS -->
     <link href="../admin-assets/css/main.css" rel="stylesheet" type="text/css" />
-</head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.js"></script>
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+<!-- Add Cropper.js CSS -->
+<link rel="stylesheet" href="https://unpkg.com/cropperjs/dist/cropper.min.css">
+
+<!-- Add jQuery (required by Cropper.js) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Add Cropper.js -->
+<script src="https://unpkg.com/cropperjs/dist/cropper.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.js"></script>
+
+</head>
+<style>
+    .tooltip-ellipsis {
+  max-width: 200px; /* Adjust the maximum width as needed */
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  position: relative;
+  cursor: help;
+}
+
+.tooltip-ellipsis::after {
+  content: attr(title);
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 8px;
+  background-color: #000;
+  color: #fff;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s;
+}
+
+.tooltip-ellipsis:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+</style>
 <body>
     <%- include('../layouts/adminNav.ejs') %>	
 

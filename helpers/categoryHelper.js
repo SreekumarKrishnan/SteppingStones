@@ -5,7 +5,8 @@ const { error } = require('console');
 
 const createCategory = (data)=>{
     return new Promise(async(resolve,reject)=>{
-        const category = new Category({name:data.name,description:data.description});
+        const name =data.name.toUpperCase();
+        const category = new Category({name:name,description:data.description});
         category.save()
         .then((savedCategory)=>{
             resolve(savedCategory);

@@ -20,56 +20,229 @@
 </section>
 <!-- End Banner Area -->
 
-<!--================Login Box Area =================-->
 <section class="login_box_area section_gap">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="login_box_img">
-                    <img class="img-fluid" src="../user-assets/img/login.jpg" alt="">
-                    <div class="hover">
-                        <h4>Have an account?</h4>
-                        <p></p>
-                        <a class="primary-btn" href="/login">Log In</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
+            <div class="col-lg-12">
                 <div class="login_form_inner">
-                    <h3>Create an account?</h3>
-                    <form class="row login_form" action="/signup" method="post" id="contactForm" novalidate="novalidate">
-                        <div class="col-md-12 form-group">
-                            <input type="text" class="form-control" id="name" name="fname" placeholder="Firstname" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Firstname'" >
+                    <h3>Register</h3>
+                    <form class="row login_form" id="myForm" method="post" action="/signup">
+          <div class="col-md-12 form-group">
+                            <input type="text" class="form-control" id="fname" name="fname" placeholder="First Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'First Name'" onkeyup="fnameValidation()">
+                            <span id="fnameError" class="text-danger"></span>
+                        </div>
+          <div class="col-md-12 form-group">
+                            <input type="text" class="form-control" id="lname" name="lname" placeholder="Last Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Last Name'" onkeyup="lnameValidation()">
+                            <span id="lnameError" class="text-danger"></span>
+
                         </div>
                         <div class="col-md-12 form-group">
-                            <input type="text" class="form-control" id="name" name="lname" placeholder="Lastname" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Lastname'" >
+                            <input type="text" class="form-control" id="email" name="email" placeholder="Email ID" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email'" onkeyup="emailValidation()">
+                            <span id="emailError" class="text-danger"></span>
+
+                        </div>
+          <div class="col-md-12 form-group">
+                            <input type="number" class="form-control" id="mno" name="mno" placeholder="Mobile Number" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Mobile'" onkeyup="mnoValidation()">
+                            <p id="err" class="text-danger"></p>
+                            <span id="mnoError" class="text-danger"></span>
+
+
                         </div>
                         <div class="col-md-12 form-group">
-                            <input type="text" class="form-control" id="name" name="email" placeholder="Email" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email'" >
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'" onkeyup="passwordValidation()">
+                            <span id="passwordError" class="text-danger"></span>
+
                         </div>
                         <div class="col-md-12 form-group">
-                            <input type="text" class="form-control" id="name" name="mno" placeholder="Mobile number" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Mobile number'" >
+                            <input type="password" class="form-control" id="confPassword" name="confPassword" placeholder="Confirm Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Confirm Password'" onkeyup="confPasswordValidation()">
+                            <p id="err" class="text-danger"></p>
                         </div>
+                        <span id="confPasswordError" class="text-danger"></span>
+
+                    
                         <div class="col-md-12 form-group">
-                            <input type="password" class="form-control" id="name" name="password" placeholder="Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'" >
+                            <button type="submit"  class="primary-btn" >SignUp</button>
+                        
                         </div>
-                        <div class="col-md-12 form-group">
-                            <input type="password" class="form-control" id="name" name="confPassword" placeholder="Conform Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'" >
-                        </div>
-                      
-                        <div class="col-md-12 form-group">
-                            <button type="submit" value="submit" class="primary-btn">Register</button>
-                            
-                        </div>
-                      
                     </form>
-                    <%=(typeof message!=='undefined')?message:""%>
+        <%=(typeof message!=='undefined')?message:""%>
                 </div>
             </div>
         </div>
     </div>
 </section>
-<!--================End Login Box Area =================-->
 
 
 <%- include('../layouts/footer.ejs')%>
+
+
+<script>
+    const myForm = document.getElementById("myForm")
+
+
+    const fname = document.getElementById("fname")
+    const lname = document.getElementById("lname")
+    const email = document.getElementById("email")
+    const mno = document.getElementById("mno")
+    const password = document.getElementById("password")
+    const confPassword = document.getElementById("confPassword")
+
+
+    
+
+    const fnameError = document.getElementById("fnameError")
+    const lnameError = document.getElementById("lnameError")
+    const mnoError = document.getElementById("mnoError")
+    const emailError = document.getElementById("emailError")
+    const passwordError = document.getElementById("passwordError")
+    const confPasswordError = document.getElementById("confPasswordError")
+
+
+
+
+
+
+    const nameRegex = /^[A-Za-z]+$/;
+
+
+    function fnameValidation(){
+        const fnameValue = fname.value
+        if(fnameValue.trim()==0){
+            fnameError.innerHTML = 'First Name is required'
+            fnameError.style.color = 'red'
+            fname.style.border = "solid 2px red";
+            return false;
+        }
+
+        if(!fnameValue.match(nameRegex)){
+            fnameError.innerHTML = 'First Name is not Valid'
+            fnameError.style.color = 'red'
+            fname.style.border = "solid 2px red";
+            return false;
+        }
+
+
+
+        fnameError.innerHTML = ""
+        fnameError.style.color = "green"
+        fname.style.border = "solid 2px green";
+        return true
+    }
+
+    function lnameValidation(){
+        const lnameValue = lname.value
+        if(lnameValue.trim()==0){
+            lnameError.innerHTML = 'First Name is required'
+            lnameError.style.color = 'red'
+            lname.style.border = "solid 2px red";
+            return false;
+        }
+
+        if(!lnameValue.match(nameRegex)){
+            lnameError.innerHTML = 'First Name is not Valid'
+            lnameError.style.color = 'red'
+            lname.style.border = "solid 2px red";
+            return false;
+        }
+
+
+
+        lnameError.innerHTML = ""
+        lnameError.style.color = "green"
+        lname.style.border = "solid 2px green";
+        return true
+    
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    function emailValidation(){
+        const emailValue = email.value
+        if(!emailValue.match(emailRegex)){
+            emailError.innerHTML = 'Email not valid'
+            emailError.style.color = 'red'
+            email.style.border = "solid 2px red";
+            return false;
+        }
+        emailError.innerHTML = ""
+        emailError.style.color = "green"
+        email.style.border = "solid 2px green";
+        return true
+    }
+
+
+
+
+    const mobileRegex =  /^\d{10}$/
+    function mnoValidation(){
+        const mnoValue = mno.value
+        if(!mnoValue.match(mobileRegex)){
+            mnoError.innerHTML = 'Mobile Number not valid'
+            mnoError.style.color = 'red'
+            mno.style.border = "solid 2px red";
+            return false;
+        }
+        mnoError.innerHTML = ""
+        mnoError.style.color = "green"
+        mno.style.border = "solid 2px green";
+        return true
+    }
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
+    function passwordValidation(){
+        const passwordValue = password.value
+        if(!passwordValue.match(passwordRegex)){
+            passwordError.innerHTML = 'Password should contain atleast 8 characters 1 number and a special chara'
+            passwordError.style.color = 'red'
+            password.style.border = "solid 2px red";
+            return false;
+        }
+        passwordError.innerHTML = ""
+        passwordError.style.color = "green"
+        password.style.border = "solid 2px green";
+        return true
+    }
+
+    function confPasswordValidation(){
+        const passwordValue = password.value
+        const confPasswordValue = confPassword.value
+        if(passwordValue !== confPasswordValue){
+            console.log(confPasswordValue);
+            confPasswordError.innerHTML = 'Password and Confirm Password should be same'
+            confPasswordError.style.color = 'red'
+            confPassword.style.border = "solid 2px red";
+            return false;
+        }
+        confPasswordError.innerHTML = ""
+        confPasswordError.style.color = "green"
+        confPassword.style.border = "solid 2px green";
+        return true
+    }
+
+
+    
+
+
+
+
+
+
+
+
+    myForm.addEventListener("submit",(event)=>{
+        event.preventDefault();
+        if(!fnameValidation() || !lnameValidation() ||  !emailValidation() ||!mnoValidation() || !passwordValidation() || !confPasswordValidation()) {
+            return false
+        }else{
+            myForm.submit()
+        }
+
+    })
+
+
+    
+
+
+
+
+
+
+
+</script>

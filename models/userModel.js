@@ -22,13 +22,16 @@ const userSchema = mongoose.Schema({
         required:true
     },
     is_blocked:{
-        type:Number,
+        type:Boolean,
         required:true,
         default:false
     },
     wallet:{
         type:Number,
         default:0
+    },
+    walletTransaction:{
+        type:Array
     },
     coupons:{
         type:Array

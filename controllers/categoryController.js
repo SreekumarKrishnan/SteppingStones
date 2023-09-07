@@ -21,7 +21,9 @@ const loadAddCategory = async (req,res)=>{
 
 const createCategory = async(req,res)=>{
     try {
-        const existingCategory = await Category.findOne({name:req.body.name});
+        const name = req.body.name.toUpperCase();
+
+        const existingCategory = await Category.findOne({name:name});
         if(existingCategory){
             return res.render('addCategory',{message:"Category already exists"});
         }
@@ -70,6 +72,15 @@ const  loadUpdateCategory = async (req,res)=>{
 
 const updateCategory = async (req,res)=>{
     try {
+        const name = req.body.name.toUpperCase();
+
+        const existingCategory = await Category.findOne({name:name});
+        if(existingCategory){
+            return res.render('addCategory',{message:"Category already exists"});
+        }
+        if(!req.body.name||req.body.name.trim().length===0){
+            return res.render('addCategory',{message:"Category name is required"});
+        }
         const id = req.body.id;
         await categoryHelper.updateCategory(id,req.body);
         res.redirect('/admin/category');
