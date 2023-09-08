@@ -16,7 +16,7 @@ const sendOtp = async (mobileNumber,otp)=>{
         await client.messages.create({
             body:`Your otp for Stepping Stones sign up is ${otp}`,
             from:'+13253264559',
-            to:`+91${mobileNumber}`
+            to:`+918156813079`
         })
     } catch (error) {
         console.log(error.message);
