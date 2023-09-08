@@ -58,105 +58,87 @@ const loadLogin = async (req,res)=>{
     }
 }
 const insertUser = async(req,res)=>{
-    //need destructuring
-    
-    const {fname, lname, email, mno, password, confPassword } = req.body;
-    
+    const email = req.body.email;
+    const mobileNumber = req.body.mno
     const existingUser = await User.findOne({email:email})
-    if (!fname || fname.trim().length === 0) {
-        return res.render("signup", { message: "Name is required" });
-    }
-    if (/\d/.test(fname) || /\d/.test(lname)) {
-        return res.render("signup", { message: "Name should not contain numbers" });
-      }
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)){
-        return res.render("signup", { message: "Email Not Valid" });
-    }
+
     if(existingUser){
-      return res.render("signup",{message:"Email already exists"})
-    }
-    const mobileNumberRegex = /^\d{10}$/;
-    if (!mobileNumberRegex.test(mno)) {
-        return res.render("signup", { message: "Mobile Number should have 10 digit" });
-
-    }
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
-    if(!passwordRegex.test(password)){
-        return res.render("signup", { message: "Password Should Contain atleast 8 characters,one number and a special character" });
+      return res.render("register",{message:"Email already exists"})
     }
 
-   
-
-
-    if(password!= confPassword){
-        return res.render("signup", { message: "Password and Confirm Password must be same" });
+    if(req.body.password!=req.body.confPassword){
+        return res.render("register", { message: "Password and Confirm Password must be same" });
     }
-   
 
-    const otp =otpHelper.generateOtp();
-    await otpHelper.sendOtp(req.body.mno,otp);
-    console.log(`otp is ${otp}`);
-
+    await otpHelper.sendOtp(mobileNumber)
     try {
-     req.session.otp = otp;
-     req.session.userData = req.body;
-     req.session.mobile = req.body.mno;
-     res.render('verifyOtp');
+        req.session.userData = req.body;
+        req.session.mobile = mobileNumber 
+        res.render('verifyOtp')
     } catch (error) {
         console.log(error.message);
+        res.redirect('/error-500')
+ 
     }
 }
 
-const resendOtp = async (req,res)=>{
+const resendOTP = async (req, res) => {
+    const mobileNumber = req.session.mobile
     try {
-        const userData = req.session.userData;
-        if(!userData){
-            res.status(400).json({message:"Invalid or expaired session"});
-        }
-        const otp = otpHelper.generateOtp();
-        req.session.otp = otp;
-        await otpHelper.sendOtp(req.session.mobile,req.session.otp);
-        console.log(`Resend otp is ${req.session.otp}`);
-        res.render('verifyOtp',{message:"OTP resent successfully"});
+      // Retrieve user data from session storage
+      const userData = req.session.userData;
+  
+      if (!userData) {
+        res.status(400).json({ message: 'Invalid or expired session' });
+      }
+  
+      // Generate and send new OTP using Twilio
 
-        
+
+      await otpHelper.sendOtp(mobileNumber)
+  
+      res.render('verifyOtp',{ message: 'OTP resent successfully' });
     } catch (error) {
-        console.log("Error: ",error);
-        res.render('verifyOtp',{message:"Failed to send otp"});
+      console.error('Error: ', error);
+      res.render('verifyOtp',{ message: 'Failed to send otp' });
     }
-}
+  };
+  
 
-const verifyOtp = async (req,res)=>{
-    const otp = req.body.otp;
+const verifyOtp = async(req,res)=>{
+    const otp = req.body.otp
     try {
-        const sessionOTP = req.session.otp;
-        const userData = req.session.userData;
-        if(!sessionOTP||!userData){
-            res.render('verifyOtp',{message:"Invalid session"});
-        }else if(sessionOTP!==otp){
-            res.render('verifyOtp',{message:"Invalid otp"});
+    const userData = req.session.userData;
+    const verified = await otpHelper.verifyCode(userData.mno,otp)
+
+    if(verified){
+    const spassword =await securePassword(userData.password)
+        const user = new User({
+            fname:userData.fname,
+            lname:userData.lname,
+            email:userData.email,
+            mobile:userData.mno,
+            password:spassword,
+            is_admin:0
+        })
+        const userDataSave = await user.save()
+        if(userDataSave){
+            const token = createToken(user._id);
+            res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
+            res.redirect('/')
         }else{
-            const spassword = await securePassword(userData.password);
-            const user = new User({
-                fname:userData.fname,
-                lname:userData.lname,
-                email:userData.email,
-                mobile:userData.mno,
-                password:spassword
-            });
-            const userDataSave = await user.save();
-            if(userDataSave){
-                const token = createToken(user._id);
-                res.cookie('jwt',token,{httpOnly:true,maxAge:maxAge*1000});
-                res.redirect('/');
-            }else{
-                res.render('signup',{message:"Registration failed"});
-            }
+            res.render('register',{message:"Registration Failed"})
         }
+      }else{
+        res.render('verifyOtp',{ message: 'Wrong Otp' });
+
+      }
+
 
     } catch (error) {
         console.log(error.message);
+        res.redirect('/error-500')
+     
     }
 }
 
@@ -187,32 +169,38 @@ const loadForgotPassword = async(req,res)=>{
     }
 }
 
-const forgotPasswordOtp = async(req,res)=>{
-    const user = await User.findOne({mobile:req.body.mobile});
+const forgotPasswordOtp = async(req, res)=>{       
+    const user = await User.findOne({mobile : req.body.mobile})                                     
+    // req.session.number = number
     if(!user){
-        res.render('forgotPassword',{message:"User not registered"});
+        res.render('forgotPassword',{message:"User Not Registered"})
     }else{
-        const otp = otpHelper.generateOtp();
-        //await otpHelper.sendOtp(user.mobile,otp);
-        console.log(`Forgot password otp is ${otp}`);
-        req.session.otp = otp;
-        req.session.email = user.email;
-        res.render('forgotPasswordOtp');
+        await otpHelper.sendOtp(user.mobile)
+        req.session.email = user.email 
+        req.session.mobile = req.body.mobile
+        res.render('forgotPasswordOtp')
     }
-}
-
-const resetPasswordOtpVerify = async(req,res)=>{
-    try {
-        const otp = req.session.otp;
-        if(otp===req.body.otp){
-            res.render('resetPassword');
-        }else{
-            res.render('forgotPasswordOtp',{message:"Your otp was wrong"});
-        }
-    } catch (error) {
-        console.log(error.message);
-    }
-}
+     
+  }
+  
+  const resetPasswordOtpVerify = async (req,res)  => {
+      try{
+          const mobile = req.session.mobile
+          const reqOtp = req.body.otp
+          const verified = await otpHelper.verifyCode(mobile,reqOtp)
+          const otpHolder = await User.find({ mobile : req.body.mobile })
+          if(verified){
+              res.render('resetPassword')
+          }
+          else{
+              res.render('forgotPasswordOtp',{message:"Your OTP was Wrong"})
+          }
+      }catch(error){
+          console.log(error);
+          res.redirect('/error-500')
+  
+      }
+  }
 
 const setNewPassword = async(req,res)=>{
    try {
@@ -350,7 +338,7 @@ module.exports={
     verifyOtp,
     verifyLogin,
     logout,
-    resendOtp,
+    resendOTP,
     loadForgotPassword,
     forgotPasswordOtp,
     resetPasswordOtpVerify,
