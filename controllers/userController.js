@@ -60,14 +60,14 @@ const loadLogin = async (req,res)=>{
 const insertUser = async(req,res)=>{
     const email = req.body.email;
     const mobileNumber = req.body.mno
-    const existingUser = await User.findOne({email:email})
+    const existingUser = await User.findOne({email:email}) 
 
     if(existingUser){
-      return res.render("register",{message:"Email already exists"})
+      return res.render("signup",{message:"Email already exists"})
     }
 
     if(req.body.password!=req.body.confPassword){
-        return res.render("register", { message: "Password and Confirm Password must be same" });
+        return res.render("signup", { message: "Password and Confirm Password must be same" });
     }
 
     await otpHelper.sendOtp(mobileNumber)
