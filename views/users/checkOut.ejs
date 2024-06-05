@@ -100,9 +100,17 @@
                
                         <div class="coupon_area">
                                 <input type="text" placeholder="Enter coupon code" name="couponCode" id="couponCode">
+                                <select id="couponDropdown"  style="width: 100px; height: 40px; margin-top: 10px;" onchange="updateCouponCode()">
+                                  <option value="">Select a coupon</option>
+                                  <% coupons.forEach(coupon => { %>
+                                      <option value="<%= coupon.couponCode %>"><%= coupon.couponCode %></option>
+                                  <% }); %>
+                              </select>
                                 <a class="primary-btn" href="#" style="width: 100px; height: 40px; margin-top: 10px;" onclick="applyCoupon('<%=total.cartTotal%>')" >Apply</a>
                         </div>
+
                         <span id="couponErr"></span>
+
                         <div class="payment_item">
                             <div class="radion_btn">
                                 <input type="radio" id="f-option4" name="paymentOption" value="wallet" >
@@ -414,7 +422,7 @@ function validateForm() {
 
 <script>
     
-    function proceedToPayment() {
+function proceedToPayment() {
       event.preventDefault()
       console.log("testing");
 
@@ -479,6 +487,8 @@ $.ajax({
    }
 })
 }
+
+
 
 function applyCoupon(total) {
     let couponCode = document.getElementById('couponCode').value
@@ -626,4 +636,14 @@ function applyCoupon(total) {
     }
   
   </script>
+
+
+<script>
+  function updateCouponCode() {
+            // Get the selected coupon code from the dropdown
+            const selectedCoupon = document.getElementById('couponDropdown').value;
+            // Set the selected coupon code to the input field
+            document.getElementById('couponCode').value = selectedCoupon;
+  }
+</script>
 

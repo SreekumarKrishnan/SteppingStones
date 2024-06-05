@@ -5791,3 +5791,34 @@ label {
     color: #ffba00; }
 
 /*# sourceMappingURL=main.css.map */
+
+
+.coupon_area {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px; /* Space between elements */
+  width: 200px; /* Adjust as needed */
+  margin: 0 auto; /* Center align the coupon area */
+}
+.coupon_area input,
+.coupon_area select,
+.coupon_area .primary-btn {
+  width: 100%;
+  height: 40px;
+}
+.coupon_area .primary-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #007bff; /* Button background color */
+  color: white;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+}
+.coupon_area .primary-btn:hover {
+  background-color: #0056b3; /* Darker background on hover */
+}
+
+

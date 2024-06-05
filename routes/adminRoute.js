@@ -63,6 +63,8 @@ adminRoute.get('/couponList',validate.requireAuth,couponController.couponList)
 adminRoute.get('/addCoupon',validate.requireAuth,couponController.loadCouponAdd)
 adminRoute.get('/generate-coupon-code',validate.requireAuth,couponController.generateCouponCode)
 adminRoute.post('/addCoupon',couponController.addCoupon)
+adminRoute.get('/editCoupon',couponController.loadCouponEdit)
+adminRoute.patch('/editCoupon',couponController.updateCouponDetails)
 adminRoute.delete('/removeCoupon',couponController.removeCoupon)
 
 adminRoute.get('/salesReport',validate.requireAuth,adminController.getSalesReport)

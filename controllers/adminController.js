@@ -319,6 +319,7 @@ const cancelOrder = async(req,res)=>{
     report.forEach((orders) => {
       details.push(orders.orders);
     });
+    details.sort((a,b)=> b.createdAt-a.createdAt)
   
     res.render('salesReport',{details,getDate})
   

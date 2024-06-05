@@ -1,6 +1,8 @@
 const Address = require('../models/addressModel');
 const Cart = require('../models/cartModel');
 const Order = require('../models/orderModel');
+const Coupon = require('../models/couponModel')
+const User = require('../models/userModel')
 const orderHelper = require('../helpers/orderHelper');
 const couponHelper = require('../helpers/couponHelper');
 const { ObjectId } = require("mongodb");
@@ -13,6 +15,10 @@ const checkOut = async (req,res)=>{
         const user = res.locals.user
         const total = await Cart.findOne({ user: user.id });
         const address = await Address.findOne({user:user._id}).lean().exec()
+      
+        const currentDate = new Date()
+        const coupons = await Coupon.find({validity:{$gte:currentDate}})
+
         
         const cart = await Cart.aggregate([
             {
@@ -39,7 +45,7 @@ const checkOut = async (req,res)=>{
             }
           ]);
       if(address){
-        res.render('checkOut',{address:address.addresses,cart,total}) 
+        res.render('checkOut',{address:address.addresses,cart,total,coupons}) 
       }else{
         res.render('checkOut',{address:[],cart,total})
       }

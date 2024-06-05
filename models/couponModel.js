@@ -7,9 +7,9 @@ const couponSchema = new mongoose.Schema({
     validity: {
       type: Date,
       default: new Date(),
-    },
+    }, 
     minPurchase: { type: Number },
-    minDiscountPercentage: { type: Number },
+    minDiscountPercentage: { type: Number }, 
     maxDiscountValue: { type: Number },
     description: { type: String },
     createdAt: {
@@ -19,3 +19,4 @@ const couponSchema = new mongoose.Schema({
 })
 
 module.exports = mongoose.model('Coupon', couponSchema);
+         

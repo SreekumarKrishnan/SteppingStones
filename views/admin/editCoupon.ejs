@@ -5,19 +5,12 @@
       <div class="col-12 grid-margin">
         <div class="card">
           <div class="card-body">
-            <h4 class="card-title pb-5">Add new coupon</h4>
+            <h4 class="card-title pb-5">Edit coupon</h4>
             <form class="form-sample">
               <div class="alert alert-danger" id="errorDisplay" role="alert" hidden></div>
   
               <div class="col">
-                <div class="col-md-12 mb-3">
-                  <label class="form-label">Coupon Code</label>
-                  <div class="input-group">
-                    <input type="text" id="couponName" class="form-control" value="" placeholder="Generate Coupon Code" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                    <button class="btn btn-outline-info" type="button" onclick="generateCoupon()">Generate Code</button>
-                    <p id="error1" class="text-danger"></p>
-                  </div>
-                </div>
+               
   
                 <div class="col-md-12 mb-3">
                   <label class="form-label">Validity</label>
@@ -27,27 +20,30 @@
   
                 <div class="col-md-12 mb-3">
                   <label class="form-label">Min Purchase</label>
-                  <input id="minAmount" type="number" class="form-control" />
+                  <input id="minAmount" value="<%= couponDetails.minPurchase%>" type="number" class="form-control" />
                   <p id="error3" class="text-danger"></p>
                 </div>
   
                 <div class="col-md-12 mb-3">
                   <label class="form-label">Discount (%)</label>
-                  <input id="discountPercentage" type="number" class="form-control" />
+                  <input id="discountPercentage" value="<%= couponDetails.minDiscountPercentage%>" type="number" class="form-control" />
                   <p id="error4" class="text-danger"></p>
                 </div>
   
                 <div class="col-md-12 mb-3">
                   <label class="form-label">Max Discount (Rs)</label>
-                  <input id="maxDiscountValue" type="number" class="form-control" />
+                  <input id="maxDiscountValue" value="<%= couponDetails.maxDiscountValue%>" type="number" class="form-control" />
                   <p id="error5" class="text-danger"></p>
                 </div>
   
                 <div class="col-md-12 mb-3">
                   <label class="form-label">Description (T&amp;C)</label>
-                  <textarea name="" class="form-control" id="description" cols="45" rows="5"></textarea>
+                  <textarea name="" class="form-control" id="description" cols="45" rows="5"><%= couponDetails.description%></textarea>
                   <p id="error6" class="text-danger"></p>
                 </div>
+
+                <input type="hidden" id="couponId" value="<%= couponDetails.couponId %>" name="couponId">
+
   
                 <div class="col-12">
                   <button type="button" class="btn btn-outline-info" onclick="validatorCoupon()">Submit</button>
@@ -72,28 +68,28 @@
   
   <script>
    function validatorCoupon(){
-  const couponName = document.getElementById('couponName')
+  const idValue = document.getElementById('couponId')
   const validity = document.getElementById('validity')
   const minAmount = document.getElementById('minAmount')
   const discountPercentage = document.getElementById('discountPercentage')
   const maxDiscount = document.getElementById('maxDiscountValue')
   const description = document.getElementById('description')
   
-  const couponNameValue = couponName.value.trim()
+  const id = idValue.value.trim()
   const validityValue = validity.value.trim()
   const minAmountValue = minAmount.value.trim()
   const discountPercentageValue = discountPercentage.value.trim()
   const maxDiscountValue = maxDiscount.value.trim()
   const descriptionValue = description.value.trim()
   
-  const error1 = couponName.parentElement.querySelector('p')
+  
   const error2 = validity.parentElement.querySelector('p')
   const error3 = minAmount.parentElement.querySelector('p')
   const error4 = discountPercentage.parentElement.querySelector('p')
   const error5 = maxDiscount.parentElement.querySelector('p')
   const error6 = description.parentElement.querySelector('p')
   
-  error1.innerText = ''
+  
   error2.innerText = ''
   error3.innerText = ''
   error4.innerText = ''
@@ -102,10 +98,7 @@
   
   let flag = 1
   
-  if (couponNameValue == '') {
-   error1.innerText = 'Coupon code is required'
-   flag = 2
-  }
+ 
   if (validityValue == '') {
    error2.innerText = 'Validity is required'
    flag = 2
@@ -140,16 +133,16 @@
   }
   
   if (flag == 1) {
-   submit(couponNameValue, validityValue, minAmountValue, discountPercentageValue, maxDiscountValue, descriptionValue)
+   submit(id,validityValue, minAmountValue, discountPercentageValue, maxDiscountValue, descriptionValue)
   }
   }
   
-  function submit(coupon, validity, minAmount, minDiscountPercentage, maxDiscount, description){
+  function submit(id,validity, minAmount, minDiscountPercentage, maxDiscount, description){
    $.ajax({
-       url : '/admin/addCoupon',
-       method : 'POST',
+       url : '/admin/editCoupon',
+       method : 'PATCH',
        data : {
-           coupon : coupon,
+           id : id,
            validity : validity,
            minPurchase : minAmount,
            minDiscountPercentage : minDiscountPercentage,
@@ -161,18 +154,11 @@
            if(response.status){
              Swal.fire({
                    icon: 'success',
-                   title: 'Coupon Added Successfully!',
+                   title: 'Coupon updated Successfully!',
                    showConfirmButton: false,
                    timer: 5000
                }).then(() => {
                    location.href = '/admin/couponList'; 
-               });
-           }else{
-             Swal.fire({
-                   icon: 'error',
-                   title: 'Oops...',
-                   text: 'Coupon Code already exists!',
-                   timer: 5000
                });
            }
        }
@@ -180,16 +166,7 @@
   }
   
   
-  function generateCoupon() {
-   $.ajax({
-     url: '/admin/generate-coupon-code',
-     method: 'GET',
-     success: (response) => {
-       document.getElementById('couponName').value = response.couponCode;
-     }
   
-   })
-  }
   </script>
 
 <script>

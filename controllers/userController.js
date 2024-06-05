@@ -268,10 +268,10 @@ const editPassword = async (req, res) => {
       const category = await Category.find({});
       const page = parseInt(req.query.page) || 1;
       const limit = 2;
-      const skip = (page - 1) * limit; // Calculate the number of products to skip
-      const searchQuery = req.query.search || ''; // Get the search query from request query parameters
-      const sortQuery = req.query.sort || 'default'; // Get the sort query from request query parameters (default value is 'default')
-      const minPrice = parseFloat(req.query.minPrice); // Get the minimum price from request query parameters
+      const skip = (page - 1) * limit; 
+      const searchQuery = req.query.search || ''; 
+      const sortQuery = req.query.sort || 'default'; 
+      const minPrice = parseFloat(req.query.minPrice); 
       const maxPrice = parseFloat(req.query.maxPrice)
 
   
@@ -298,8 +298,8 @@ const editPassword = async (req, res) => {
         sortOption = { price: -1 }; 
       }
   
-      const totalProducts = await Product.countDocuments(searchFilter); // Get the total number of products matching the search query
-      const totalPages = Math.ceil(totalProducts / limit); // Calculate the total number of pages
+      const totalProducts = await Product.countDocuments(searchFilter); 
+      const totalPages = Math.ceil(totalProducts / limit); 
   
       const products = await Product.find(searchFilter)
         .skip(skip)

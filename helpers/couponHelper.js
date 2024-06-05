@@ -12,7 +12,7 @@ const generatorCouponCode =  () => {
         let couponCode = voucherCode.generate({
           length: 6,
           count: 1,
-          charset: "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+          charset: "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", 
           prefix: "STEP-",
         });
 
@@ -49,7 +49,7 @@ const verifyCoupon =  (userId, couponCode) => {
          Coupon.find({ couponCode: couponCode }).then(
           async(couponExist) => {
             if (couponExist.length>0) {
-              if (new Date(couponExist[0].validity) - new Date() > 0) {
+              if (new Date(couponExist[0].validity) - new Date() > 0) { 
                 const usersCoupon = await User.findOne({
                   _id: userId,
                   coupons: { $in: [couponCode] },
@@ -158,6 +158,25 @@ const addCouponToUser =  (couponCode, userId) => {
     }
 }
 
+const updateCoupon = async (data)=>{     
+  
+  try {
+    await Coupon.updateOne(
+      {_id : new ObjectId(data.id)},
+      {$set:{
+        validity : data.validity,
+        minPurchase : data.minPurchase,
+        minDiscountPercentage : data.minDiscountPercentage,
+        maxDiscountValue : data.maxDiscount,
+        description : data.description
+      }}
+    )
+  } catch (error) {
+    console.log(error);  
+  }
+ 
+}
+
 
 
 module.exports = {
@@ -165,5 +184,6 @@ module.exports = {
     addCoupon,
     verifyCoupon,
     applyCoupon,
-    addCouponToUser
+    addCouponToUser,
+    updateCoupon
 }

@@ -35,6 +35,7 @@
                     <th>Discount %</th>
                     <th>Max Discount Amount</th>
                     <th>Expiry Date</th>
+                    <th class="text-end">Edit</th>
                     <th class="text-end"> Action </th>
                   </tr>
                 </thead>
@@ -48,6 +49,9 @@
                     <td><%=item.minDiscountPercentage%>%</td>
                     <td>₹<%=item.maxDiscountValue%></td>
                     <td><%= new Date(item.validity).toDateString()%></td>
+                    <td class="text-end">
+                      <button class="btn btn-secondary" onclick="editCoupon('<%=item._id%>')">Edit</button>
+                    </td>
                     <td class="text-end">
                       <button class="btn-sm btn-danger" onclick="removeCoupon('<%=item._id%>')">Remove</button>
                     </td>
@@ -69,6 +73,11 @@
   <%- include('../layouts/adminFooter')%>
 
   <script>
+
+    function editCoupon(couponId){ 
+      window.location.href = `/admin/editCoupon?id=${couponId}`;
+    }
+
     function removeCoupon(couponId){
   $.ajax({
     url : '/admin/removeCoupon',

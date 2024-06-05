@@ -1,9 +1,10 @@
 const couponHelper = require('../helpers/couponHelper')
 const Coupon = require('../models/couponModel')
 
+
 const couponList = async(req,res)=>{
     try {
-        const couponList = await Coupon.find()
+        const couponList = await Coupon.find().sort({'createdAt':-1})
         res.render('couponList',{couponList})
     } catch (error) {
         
@@ -15,6 +16,28 @@ const loadCouponAdd = async(req,res)=>{
         res.render('addCoupon')
     } catch (error) {
         console.log(error.message);
+    }
+}
+
+const loadCouponEdit = async (req,res)=>{
+    try {
+        const data = await Coupon.findOne({_id:req.query.id}) 
+        const couponDetails = data.toObject()
+        couponDetails['couponId']= req.query.id
+        
+
+        res.render('editCoupon',{couponDetails}) 
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const updateCouponDetails = async (req,res)=>{
+    try {
+        await couponHelper.updateCoupon(req.body)
+        res.json({status :true})
+    } catch (error) {
+        console.log(error);
     }
 }
 
@@ -62,5 +85,7 @@ module.exports = {
     loadCouponAdd,
     generateCouponCode,
     addCoupon,
-    removeCoupon
+    removeCoupon,
+    loadCouponEdit,
+    updateCouponDetails
 }
