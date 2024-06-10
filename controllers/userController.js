@@ -267,7 +267,7 @@ const editPassword = async (req, res) => {
     try {
       const category = await Category.find({});
       const page = parseInt(req.query.page) || 1;
-      const limit = 2;
+      const limit = 5;
       const skip = (page - 1) * limit; 
       const searchQuery = req.query.search || ''; 
       const sortQuery = req.query.sort || 'default'; 
