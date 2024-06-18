@@ -36,7 +36,8 @@ userRoute.use(cookieParser());
 
 userRoute.all('*',validate.checkUser);
 userRoute.get('/',userController.homeLoad);
-userRoute.get('/signup',userController.loadSignup);
+userRoute.get('/signup',userController.loadSignUpError); 
+//userRoute.get('/signup',userController.loadSignup);
 userRoute.post('/signup',userController.insertUser);
 userRoute.get('/resendOtp',userController.resendOTP);
 userRoute.post('/verifyOtp',userController.verifyOtp);

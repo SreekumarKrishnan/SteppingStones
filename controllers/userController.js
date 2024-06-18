@@ -38,6 +38,15 @@ const homeLoad = async(req,res)=>{
         console.log(error.message);
     }
 }
+
+const loadSignUpError = async (req,res)=>{
+  try {
+    res.render('signUpError');
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
 const loadSignup = async (req,res)=>{
     try {
         res.render('signup');
@@ -332,6 +341,7 @@ const editPassword = async (req, res) => {
 
 module.exports={
     homeLoad,
+    loadSignUpError,
     loadSignup,
     loadLogin,
     insertUser,
