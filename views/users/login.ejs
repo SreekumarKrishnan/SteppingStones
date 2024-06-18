@@ -50,9 +50,9 @@
                             <a href="/forgotPassword">Forgot Password?</a>
                         </div>
                     </form>
-                    <div>
-                        <button class="demo-btn" onclick="copyEmail()">Demo Email</button>
-                        <button class="demo-btn" onclick="copyPassword()">Demo Password</button>
+                    <div class="demo-user">
+                        <p>Demo user : sreekumartk759@gmail.com</p>
+                        <p>Demo password : Qwerty123$</p>
                     </div>
                     <%=(typeof message!=='undefined')?message:""%>
                 </div>
@@ -66,45 +66,25 @@
 <%- include('../layouts/footer.ejs')%>
 
 <style>
-    .demo-btn {
-        background-color: #28a745;
-        color: #fff;
-        border: none;
-        padding: 10px 20px;
-        font-size: 16px;
-        border-radius: 5px;
-        cursor: pointer;
-        margin: 5px;
-        transition: background-color 0.3s ease;
+    .demo-user {
+        max-width: 300px;
+        margin: 20px auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+        font-family: Arial, sans-serif;
     }
-
-    .demo-btn:hover {
-        background-color: #218838;
-    }
-
-    .demo-btn:focus {
-        outline: none;
+    .demo-user p {
+        margin: 0 0 10px;
+        font-size: 14px;
+        color: #333;
     }
 </style>
 
+
 <script>
-
- 
-
-    // Functions to copy demo credentials to clipboard and paste into login fields
-    function copyEmail() {
-        const email = "sreekumartk759@gmail.com";
-        navigator.clipboard.writeText(email).then(() => {
-            document.getElementById("email").value = email;
-        });
-    }
-
-    function copyPassword() {
-        const password = "Qwerty123$";
-        navigator.clipboard.writeText(password).then(() => {
-            document.getElementById("password").value = password;
-        });
-    }
 
     const myForm = document.getElementById("myForm")
 
